@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   This file is part of BOINC.
   http://boinc.berkeley.edu
   Copyright (C) 2012 University of California
@@ -20,55 +19,71 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    
-    <ImageView 
-        android:id="@+id/logo"
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:layout_marginLeft="40dp"
-    	android:layout_marginRight="40dp"
-    	android:layout_marginBottom="20dp"
-    	android:layout_marginTop="20dp"
-    	android:maxWidth="400dp"
-    	android:adjustViewBounds="true"
-    	android:src="@drawable/boinc_logo_large"
-    	android:contentDescription="@string/app_name"
-    	android:layout_centerHorizontal="true"/>
-    
-    <TextView 
-        android:id="@+id/desc"
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:text="@string/attachproject_list_desc"
-    	android:textAppearance="?android:attr/textAppearanceSmall"
-    	android:textStyle="bold"
-    	android:textColor="@android:color/white"
-    	android:layout_below="@+id/logo"
-    	android:padding="5dp"
-    	android:background="@drawable/shape_dark_blue_background_wo_stroke"
-    	android:layout_centerHorizontal="true"/>
+    android:orientation="vertical"
+    android:background="@drawable/background_pattern">
 
-    <ListView
-        android:id="@+id/listview"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-    	android:layout_below="@+id/desc"
-        android:layout_above="@+id/continue_button"/>
-    
-    <Button 
-        android:id="@+id/continue_button"
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/generic_button_continue"
-		android:textColor="@android:color/white"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-        android:background="@drawable/shape_button_blue"
-        android:minWidth="150dp"
-		android:padding="5dp"
-		android:layout_margin="10dp"
-		android:onClick="continueClicked"/>
+        android:layout_margin="40dp"
+        android:layout_centerInParent="true"
+        android:maxWidth="400dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/mainlogo"
+        android:contentDescription="@string/status_launching"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="20dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
+            android:maxWidth="400dp"
+            android:src="@drawable/boinc_logo_large" />
+
+        <TextView
+            android:id="@+id/desc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/logo"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/shape_dark_blue_background_wo_stroke"
+            android:padding="5dp"
+            android:text="@string/attachproject_list_desc"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/continue_button"
+            android:layout_below="@+id/desc" />
+
+        <Button
+            android:id="@+id/continue_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button_blue"
+            android:minWidth="150dp"
+            android:onClick="continueClicked"
+            android:padding="5dp"
+            android:text="@string/generic_button_continue"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
 </RelativeLayout>

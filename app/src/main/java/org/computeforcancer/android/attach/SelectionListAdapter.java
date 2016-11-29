@@ -88,7 +88,11 @@ public class SelectionListAdapter extends ArrayAdapter<ProjectListEntry>{
     		name.setText(listItem.info.name);
     		description.setText(listItem.info.generalArea);
     		summary.setText(listItem.info.summary);
-    		cb.setChecked(listItem.checked);
+			if ("World Community Grid".equalsIgnoreCase(listItem.info.name)) {
+				cb.setChecked(true);
+			} else {
+				cb.setChecked(listItem.checked);
+			}
     		cb.setOnClickListener(new OnClickListener() {
     			@Override
     			public void onClick(View v) {

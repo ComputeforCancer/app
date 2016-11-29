@@ -20,12 +20,129 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <ListView
         android:id="@+id/listview"
+        android:visibility="gone"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
     </ListView>
 
+    <!-- new design -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_preferences"
+            android:textSize="25sp"
+            android:layout_marginTop="60dp"
+            android:textColor="@color/greyish_brown"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="60dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_weight="2">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switchNotifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff=""
+                    android:theme="@style/CustomSwitch"
+                    android:textOn="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prefs_notification"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="12dp"
+                    android:textColor="@color/clear_blue"
+                    android:textStyle="bold"/>
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/checkBtnDaily"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prefs_notification_daily"
+                    app:buttonTint="@color/clear_blue" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/checkBtnWeekly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prefs_notification_weekly"
+                    app:buttonTint="@color/clear_blue" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="60dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_weight="2">
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/switchRun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff=""
+                    android:theme="@style/CustomSwitch"
+                    android:textOn="" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prefs_run_automaticaly"
+                    android:textSize="20sp"
+                    android:layout_marginLeft="12dp"
+                    android:textColor="@color/clear_blue"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prefs_automaticaly_bottom_text"
+                    android:textSize="15sp"
+                    android:layout_marginLeft="12dp"
+                    android:textColor="@color/greyish_brown"
+                    android:gravity="start"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
 </LinearLayout>

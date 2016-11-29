@@ -41,4 +41,11 @@
     <!-- global colors -->
 		<color name="warning">#FCEC3D</color>
 		<color name="black">#000000</color>
+
+	<!-- custom colors -->
+		<color name="clear_blue">#2979ff</color>
+		<color name="greyish_brown">#4a4a4a</color>
+		<color name="sign_button_color">#06e4cd</color>
+		<color name="sign_button_text_color">#6034d9</color>
+
 </resources>

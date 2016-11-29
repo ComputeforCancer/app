@@ -112,7 +112,7 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		
+		//setContentView(R.layout.onboarding_layout);
 		//initialize logging with highest verbosity, read actual value when monitor connected.
 		Logging.setLogLevel(5);
 
@@ -120,7 +120,7 @@ public class SplashActivity extends Activity {
         doBindService();
         
         // set long click listener to go to eventlog
-        ImageView imageView = (ImageView) findViewById(R.id.logo);
+        /*ImageView imageView = (ImageView) findViewById(R.id.logo);
         imageView.setOnLongClickListener(new OnLongClickListener() {
 
             @Override
@@ -128,7 +128,8 @@ public class SplashActivity extends Activity {
 				startActivity(new Intent(activity,EventLogActivity.class));
                 return true;
             }
-        });
+        });*/
+
 
 	}
 	

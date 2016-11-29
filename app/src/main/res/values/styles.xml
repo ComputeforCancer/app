@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CustomSwitch" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Active thumb color & Active track color(30% transparency) -->
+        <item name="colorControlActivated">#2979ff</item>
+        <!-- Inactive thumb color -->
+        <item name="colorSwitchThumbNormal">#797979</item>
+        <!-- Inactive track color(30% transparency) -->
+        <item name="android:colorForeground">#ba797979</item>
+    </style>
+
+    <style name="NoAnimationTheme" parent="Theme.Styled.NoActionBar">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+</resources>

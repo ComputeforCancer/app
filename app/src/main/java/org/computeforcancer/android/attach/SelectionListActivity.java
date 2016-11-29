@@ -229,6 +229,25 @@ public class SelectionListActivity extends FragmentActivity{
             SelectionListActivity.this.entries.add(new ProjectListEntry()); // add account manager option to bottom of list
             SelectionListAdapter listAdapter = new SelectionListAdapter(SelectionListActivity.this, R.id.listview,entries);
             lv.setAdapter(listAdapter);
+
+
+			String selectedProjectsDebug = "";
+			// get selected projects
+			selected.clear();
+			for(ProjectListEntry tmp: entries) {
+				if(tmp.checked) {
+					selected.add(tmp.info);
+					selectedProjectsDebug += tmp.info.name + ",";
+				}
+			}
+			if(Logging.DEBUG) Log.d(Logging.TAG, "SelectionListActivity: selected projects: " + selectedProjectsDebug);
+
+			attachService.setSelectedProjects(selected); // returns immediately
+
+			// start credential input activity
+			Intent intent = new Intent(SelectionListActivity.this, CredentialInputActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
         }
     }
 	

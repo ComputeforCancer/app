@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_pattern">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_up_top_text"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:layout_marginTop="20dp"
+                android:id="@+id/textView" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/etEmail"
+                        android:inputType="textEmailAddress"
+                        android:hint="@string/sign_in_email_hint"
+                        android:layout_width="fill_parent"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/shape_editview_bottom_border"
+                        android:padding="5dp"/>
+
+                    <EditText
+                        android:id="@+id/etPassword"
+                        android:inputType="textPassword"
+                        android:hint="@string/sign_in_password_hint"
+                        android:layout_width="fill_parent"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/shape_editview_bottom_border"
+                        android:padding="5dp"/>
+
+                    <Button
+                        android:id="@+id/btnSignin"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/sign_button_text_color"
+                        android:text="@string/sign_up_btn_text"
+                        android:layout_gravity="center"
+                        android:padding="5dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/shape_sign_button"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:weightSum="3"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="0.9"
+                        android:background="@color/white"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sign_up_textview"
+                        android:textColor="@color/white"
+                        android:layout_centerHorizontal="true"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:background="@android:color/transparent"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:textSize="20sp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_centerVertical="true"
+                        android:layout_weight="0.9"
+                        android:background="@color/white"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnFacebook"
+                    android:layout_width="220dp"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/sign_in_fb"/>
+
+                <Button
+                    android:id="@+id/btnGoogle"
+                    android:layout_width="220dp"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/sign_in_google"/>
+
+                <TextView
+                    android:id="@+id/tvSkip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/skip_text"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:clickable="true"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

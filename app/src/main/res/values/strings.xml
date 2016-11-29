@@ -91,12 +91,15 @@
     <!-- project registration -->
     <string name="attachproject_registration_header">Account registration for </string>
     <string name="attachproject_registration_header_url">Project:</string>
-    <string name="attachproject_registration_header_email">eMail:</string>
+    <string name="attachproject_registration_header_email">Email Address:</string>
     <string name="attachproject_registration_header_username">Name:</string>
     <string name="attachproject_registration_header_teamname">Team:</string>
     <string name="attachproject_registration_header_pwd">Password:</string>
     <string name="attachproject_registration_header_pwd_confirm">&#8230; Retype:</string>
     <string name="attachproject_registration_button">Create</string>
+    <!-- custom -->
+    <string name="registration_signup_top_text">Please Sign up</string>
+
     <!-- account manager -->
     <string name="attachproject_acctmgr_list_desc">Use BOINC account manager to add and manage multiple projects</string>
     <string name="attachproject_acctmgr_header">Add account manager</string>
@@ -219,6 +222,12 @@
     <string name="prefs_unit_celsius">&#0176;C</string>
     <string name="prefs_unit_seconds">sec</string>
 
+    <!-- prefs custom -->
+    <string name="prefs_notification">Notifications</string>
+    <string name="prefs_run_automaticaly">Run Automatically</string>
+    <string name="prefs_notification_daily">Daily</string>
+    <string name="prefs_notification_weekly">Weekly</string>
+    <string name="prefs_automaticaly_bottom_text">Switching this off will turn off autocompute</string>
     <!-- projects tab strings -->
     <string name="projects_loading">Reading projects&#8230;</string>
     <string name="projects_add">Add project</string>
@@ -390,4 +399,32 @@
     <string name="social_invite_content_url_google">https://play.google.com/store/apps/details?id=org.computeforcancer.android</string>
     <string name="social_invite_content_url_amazon">http://www.amazon.com/gp/mas/dl/android?p=org.computeforcancer.android</string>
 
+
+    <!-- RESKIN -->
+    <!-- sign in layout -->
+    <string name="sign_in_top_text">Please sign in</string>
+    <string name="sign_in_email_hint">Email Address</string>
+    <string name="sign_in_password_hint">Password</string>
+    <string name="sign_in_forgot_text"><u>Forgot password?</u></string>
+    <string name="sign_in_btn_text">SIGN IN</string>
+
+    <!-- sign out layout -->
+    <string name="sign_up_top_text">Please sign up</string>
+    <string name="sign_up_btn_text">SIGN UP</string>
+    <string name="sign_up_textview">or</string>
+    <string name="skip_text">skip for now</string>
+    <string name="sign_in_with_facebook">Sign in with Facebook</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    
+    <!-- pre sign layout -->
+    <string name="presign_sign_in">SIGN IN</string>
+    <string name="presign_get_started">GET STARTED</string>
+
+    <!-- onboarding layout -->
+    <string name="onboarding_first_screen_top_title">Joining the fight against cancer is as simple as 1, 2, 3!</string>
+    <string name="onboarding_plug_in">Plug in your device, connect to wifi, and let it charge over 90%. </string>
+    <string name="onboarding_research">Cancer Researchers will use your device to power their calculations.</string>
+    <string name="onboarding_difference">Go to sleep knowing you’re making a difference in world. </string>
+    <string name="onboarding_tell_me_more">TELL ME MORE</string>
+    <string name="onboarding_letsdoit">LET\'S DO IT</string>
 </resources>

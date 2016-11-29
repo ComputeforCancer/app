@@ -1,0 +1,4 @@
+Screen 1.2 Sign_in.png = sign_in_layout.xml
+up.png = pre_sign_layout.xml
+Screen 5_Sign up.png = sing_up_layout.xml
+Screen 5.6.png = prefs_layout.xml (listview visibility = gone)
