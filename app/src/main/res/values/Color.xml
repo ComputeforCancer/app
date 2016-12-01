@@ -47,5 +47,8 @@
 		<color name="greyish_brown">#4a4a4a</color>
 		<color name="sign_button_color">#06e4cd</color>
 		<color name="sign_button_text_color">#6034d9</color>
+		<color name="neon_blue">#00d7ff</color>
+		<color name="dark_white">#efeeee</color>
+		<color name="blue_panel">#2979ff</color>
 
 </resources>

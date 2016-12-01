@@ -31,34 +31,24 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 public class BatchProcessingActivity extends FragmentActivity{
 	
 	private ProjectAttachService attachService = null;
 	private boolean asIsBound = false;
-	
+	/*
     private static final int NUM_HINTS = 3; // number of available hint screens
     private ViewPager mPager; // pager widget, handles animation and horizontal swiping gestures
     private PagerAdapter mPagerAdapter; // provides content to pager
 	private ArrayList<HintFragment> hints = new ArrayList<HintFragment>(); // hint fragments
-	
+	*/
 	//header
-	private TextView hintTv;
+	/*private TextView hintTv;
 	private ImageView hintIvRight;
-	private ImageView hintIvLeft;
+	private ImageView hintIvLeft;*/
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {  
@@ -67,7 +57,7 @@ public class BatchProcessingActivity extends FragmentActivity{
         
 		// setup layout
         setContentView(R.layout.attach_project_batch_processing_layout); 
-        
+        /*
         hintTv = (TextView)findViewById(R.id.hint_header_text);
         hintIvRight = (ImageView)findViewById(R.id.hint_header_image_right);
         hintIvLeft = (ImageView)findViewById(R.id.hint_header_image_left);
@@ -92,7 +82,7 @@ public class BatchProcessingActivity extends FragmentActivity{
 			}
         });
         adaptHintHeader();
-        
+        */
         doBindService();
     }
     
@@ -102,7 +92,7 @@ public class BatchProcessingActivity extends FragmentActivity{
 	    super.onDestroy();
     	doUnbindService();
 	}	
-
+/*
     @Override
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
@@ -114,9 +104,9 @@ public class BatchProcessingActivity extends FragmentActivity{
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
     }
-
+*/
 	// triggered by continue button
-	public void continueClicked(View v) {
+	public void continueClicked() {
 		boolean conflicts = attachService.unresolvedConflicts();
 		if(Logging.DEBUG) Log.d(Logging.TAG, "BatchProcessingActivity.continueClicked: conflicts? " + conflicts);
 		
@@ -153,7 +143,7 @@ public class BatchProcessingActivity extends FragmentActivity{
 		}
 		startActivity(Intent.createChooser(intent, getString(R.string.social_invite_intent_title)));
 	}
-	
+	/*
 	// adapts header text and icons when hint selection changes
 	private void adaptHintHeader() {
 		int position = mPager.getCurrentItem();
@@ -172,7 +162,7 @@ public class BatchProcessingActivity extends FragmentActivity{
 		hintIvLeft.setVisibility(leftVisibility);
 		hintIvRight.setVisibility(rightVisibility);
 	}
-	
+
 	// previous image in hint header clicked
 	public void previousHintClicked(View view) {
 		if(Logging.DEBUG) Log.d(Logging.TAG, "BatchProcessingActivity.previousHintClicked.");
@@ -184,7 +174,7 @@ public class BatchProcessingActivity extends FragmentActivity{
 		if(Logging.DEBUG) Log.d(Logging.TAG, "BatchProcessingActivity.nextHintClicked.");
 		mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 	}
-	
+	*/
 	private ServiceConnection mASConnection = new ServiceConnection() {
 	    public void onServiceConnected(ComponentName className, IBinder service) {
 	        // This is called when the connection with the service has been established, getService returns 
@@ -221,7 +211,7 @@ public class BatchProcessingActivity extends FragmentActivity{
 		@Override
 		protected void onPreExecute() {
 			if(Logging.DEBUG) Log.d(Logging.TAG, "AttachProjectAsyncTask: " + attachService.getNumberSelectedProjects() + " projects to attach....");
-			((TextView) findViewById(R.id.attach_status_text)).setText(getString(R.string.attachproject_login_loading)); // shown while project configs are loaded
+			//((TextView) findViewById(R.id.attach_status_text)).setText(getString(R.string.attachproject_login_loading)); // shown while project configs are loaded
 			super.onPreExecute();
 		}
 
@@ -248,19 +238,20 @@ public class BatchProcessingActivity extends FragmentActivity{
 		@Override
 		protected void onProgressUpdate(String... values) {
 	    	if(Logging.DEBUG) Log.d(Logging.TAG, "AttachProjectAsyncTask: trying: " + values[0]);
-	    	((TextView) findViewById(R.id.attach_status_text)).setText(getString(R.string.attachproject_working_attaching) + " " + values[0]);
+	    	//((TextView) findViewById(R.id.attach_status_text)).setText(getString(R.string.attachproject_working_attaching) + " " + values[0]);
 			super.onProgressUpdate(values);
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Void result) {/*
 			((LinearLayout) findViewById(R.id.attach_status_ongoing_wrapper)).setVisibility(View.GONE);
 			((Button) findViewById(R.id.continue_button)).setVisibility(View.VISIBLE);
-			((Button) findViewById(R.id.share_button)).setVisibility(View.VISIBLE);
+			((Button) findViewById(R.id.share_button)).setVisibility(View.VISIBLE);*/
+			continueClicked();
 			super.onPostExecute(result);
 		}
 	}
-	
+	/*
 	private class HintPagerAdapter extends FragmentStatePagerAdapter {
 		
         public HintPagerAdapter(FragmentManager fm) {
@@ -276,5 +267,5 @@ public class BatchProcessingActivity extends FragmentActivity{
         public int getCount() {
             return NUM_HINTS;
         }
-    }
+    }*/
 }

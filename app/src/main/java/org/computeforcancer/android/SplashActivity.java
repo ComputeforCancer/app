@@ -35,9 +35,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnLongClickListener;
-import android.widget.ImageView;
 
 /**
  * Activity shown at start. Forwards to BOINCActivity automatically, once Monitor has connected to Client and received first data via RPCs.
@@ -112,7 +109,8 @@ public class SplashActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		//setContentView(R.layout.onboarding_layout);
+		//setContentView(R.layout.notification_layout);
+
 		//initialize logging with highest verbosity, read actual value when monitor connected.
 		Logging.setLogLevel(5);
 
@@ -132,7 +130,7 @@ public class SplashActivity extends Activity {
 
 
 	}
-	
+
 	@Override
 	protected void onResume() { // gets called by system every time activity comes to front. after onCreate upon first creation
     	if(Logging.DEBUG) Log.d(Logging.TAG, "SplashActivity onResume()");

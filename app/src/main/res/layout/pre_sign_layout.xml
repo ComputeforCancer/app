@@ -45,7 +45,7 @@
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp">
                     <Button
-                        android:id="@+id/btnSignin"
+                        android:id="@+id/psl_sign_in_b"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="@string/presign_sign_in"
@@ -54,9 +54,10 @@
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_alignParentLeft="true"
-                        android:background="@drawable/shape_sign_in_transparent_button"/>
+                        android:background="@drawable/shape_sign_in_transparent_button"
+                        android:onClick="onClick"/>
                     <Button
-                        android:id="@+id/btnStart"
+                        android:id="@+id/psl_get_started_b"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="@string/presign_get_started"
@@ -65,7 +66,8 @@
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:padding="5dp"
-                        android:background="@drawable/shape_sign_button"/>
+                        android:background="@drawable/shape_sign_button"
+                        android:onClick="onClick"/>
 
                 </RelativeLayout>
             </RelativeLayout>

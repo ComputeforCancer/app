@@ -35,11 +35,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import org.computeforcancer.android.R;
 import org.computeforcancer.android.client.IMonitor;
 import org.computeforcancer.android.client.Monitor;
 import org.computeforcancer.android.ProjectInfo;
 import org.computeforcancer.android.utils.Logging;
+
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -235,19 +237,23 @@ public class SelectionListActivity extends FragmentActivity{
 			// get selected projects
 			selected.clear();
 			for(ProjectListEntry tmp: entries) {
+				if (tmp != null && tmp.info != null && tmp.info.name != null &&
+						"World Community Grid".equalsIgnoreCase(tmp.info.name)) {
+					tmp.checked = true;
+					selected.add(tmp.info);
+					selectedProjectsDebug += tmp.info.name + ",";
+				}/*
 				if(tmp.checked) {
 					selected.add(tmp.info);
 					selectedProjectsDebug += tmp.info.name + ",";
-				}
+				}*/
 			}
 			if(Logging.DEBUG) Log.d(Logging.TAG, "SelectionListActivity: selected projects: " + selectedProjectsDebug);
 
 			attachService.setSelectedProjects(selected); // returns immediately
 
 			// start credential input activity
-			Intent intent = new Intent(SelectionListActivity.this, CredentialInputActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+			startActivity(new Intent(SelectionListActivity.this, CredentialInputActivity.class));
         }
     }
 	
