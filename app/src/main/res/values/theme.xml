@@ -32,7 +32,7 @@
     </style>
     
     <style name="Theme.Styled.NoActionBar" parent="Theme.Styled">
-    	<item name="android:windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
 	</style>
     
     <style name="StyledActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">

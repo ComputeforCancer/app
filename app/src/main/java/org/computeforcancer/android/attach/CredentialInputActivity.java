@@ -22,31 +22,56 @@ package org.computeforcancer.android.attach;
 import java.util.ArrayList;
 import org.computeforcancer.android.R;
 import org.computeforcancer.android.fragments.AbstractBaseFragment;
-import org.computeforcancer.android.fragments.FragmentsManager;
+import org.computeforcancer.android.fragments.OnBoardingFirstFragment;
+import org.computeforcancer.android.fragments.OnBoardingSecondFragment;
+import org.computeforcancer.android.fragments.OnBoardingThirdFragment;
+import org.computeforcancer.android.fragments.PreSignInFragment;
+import org.computeforcancer.android.fragments.SignInFragment;
 import org.computeforcancer.android.utils.*;
 
 import android.app.Service;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 
-public class CredentialInputActivity extends AppCompatActivity {
+public class CredentialInputActivity extends FragmentActivity {
 
 	private ProjectAttachService attachService = null;
 	private boolean asIsBound = false;
-	private FragmentsManager mFragmentsManager;
+	//private AbstractBaseFragment mCurrentFragment;
+	private String mEmail, mName;
+	private FrameLayout mFrameHolder;
+	private ViewPager mViewPager;
+	private PagerAdapter mPagerAdapter;
+	private boolean isPagerVisible;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {  
-        super.onCreate(savedInstanceState); 
+        super.onCreate(savedInstanceState);
         if(Logging.DEBUG) Log.d(Logging.TAG, "CredentialInputActivity onCreate"); 
         doBindService();
         setContentView(R.layout.credential_input_activity);
-		mFragmentsManager = new FragmentsManager(this);
+		mFrameHolder = (FrameLayout)findViewById(R.id.cia_fragment_holder);
+		mViewPager = (ViewPager)findViewById(R.id.cia_view_pager);
+		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+		mViewPager.setAdapter(mPagerAdapter);
+		setPagerVisibility(false);
+
+		openFragment(new PreSignInFragment(), false);
         
         /*CheckBox showPwdCb = (CheckBox) findViewById(R.id.show_pwd_cb);
         showPwdCb.setOnClickListener(new OnClickListener() {
@@ -61,7 +86,18 @@ public class CredentialInputActivity extends AppCompatActivity {
 			}
         });*/
     }
-	
+
+	public void setPagerVisibility(boolean setVisible) {
+		isPagerVisible = setVisible;
+		if (setVisible) {
+			mFrameHolder.setVisibility(View.GONE);
+			mViewPager.setVisibility(View.VISIBLE);
+		} else {
+			mFrameHolder.setVisibility(View.VISIBLE);
+			mViewPager.setVisibility(View.GONE);
+		}
+	}
+
 	@Override
 	protected void onDestroy() {
 		doUnbindService();
@@ -86,10 +122,76 @@ public class CredentialInputActivity extends AppCompatActivity {
 
         if(Logging.DEBUG) Log.d(Logging.TAG, "CredentialInputActivity.continueClicked: starting BatchProcessingActivity...");
 		startActivity(new Intent(this, BatchProcessingActivity.class));
-	}	
+	}
 
 	public void openFragment(final AbstractBaseFragment fragment, final boolean addToStack) {
-		mFragmentsManager.openFragment(fragment, addToStack);
+		closeKeyboard();
+		//mCurrentFragment = fragment;
+		if (fragment instanceof SignInFragment) {
+			Bundle arguments = new Bundle();
+			arguments.putString(SignInFragment.KEY_EMAIL, mEmail);
+			arguments.putString(SignInFragment.KEY_NAME, mName);
+			fragment.setArguments(arguments);
+		}
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.replace(R.id.cia_fragment_holder, fragment, fragment.getTAG());
+		if (addToStack) {
+			ft.addToBackStack(fragment.getTAG());
+		}
+		ft.commitAllowingStateLoss();
+	}
+
+	private boolean closeKeyboard() {
+		if (getCurrentFocus() == null)
+			return false;
+		if (getCurrentFocus().getWindowToken() == null)
+			return false;
+		InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		return inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (isPagerVisible) {
+			if (mViewPager.getCurrentItem() != 0) {
+				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
+			} else {
+				setPagerVisibility(false);
+			}
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	public void openPage(int page) {
+		mViewPager.setCurrentItem(page);
+	}
+
+	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
+
+		public ScreenSlidePagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(final int position) {
+			switch (position) {
+				case 0:
+					return new OnBoardingFirstFragment();
+				case 1:
+					return new OnBoardingSecondFragment();
+				case 2:
+					return new OnBoardingThirdFragment();
+			}
+			return null;
+		}
+
+		@Override
+		public int getCount() {
+			return 3;
+		}
+
 	}
 	// triggered by individual button
 	/*
@@ -113,7 +215,8 @@ public class CredentialInputActivity extends AppCompatActivity {
 		    asIsBound = true;
 		    
 		    ArrayList<String> values = attachService.getUserDefaultValues();
-			//TODO
+			mEmail = values.get(0);
+			mName = values.get(1);
 	        //emailET.setText(values.get(0));
 	        //nameET.setText(values.get(1));
 	    }

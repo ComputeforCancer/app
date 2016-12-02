@@ -6,17 +6,20 @@
     android:background="@color/dark_grey"
     android:padding="20dp"
     android:gravity="center">
-
     <LinearLayout
+        android:id="@+id/small_notification"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="10dp"
         android:background="@color/white">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -28,17 +31,72 @@
                 android:text="@string/notify_title_text"
                 android:layout_marginLeft="5dp"
                 android:textSize="20sp"/>
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/arrow_down"/>
         </LinearLayout>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/daily_progress"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tap_to_view"
+            android:textSize="16sp"/>
+    </LinearLayout>
+     <!-- expand -->
+    <LinearLayout
+        android:id="@+id/show_full_notification"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone"
+        android:background="@color/white">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/notify_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/greyish_brown"
+                android:text="@string/notify_title_text"
+                android:layout_marginLeft="5dp"
+                android:textSize="20sp"/>
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="10dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/arrow_up"/>
+        </LinearLayout>
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/greyish_brown"
             android:text="@string/notify_donations"
             android:textSize="20sp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:gravity="center">
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,13 +105,13 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/tvSmallCountHours"
+                    android:id="@+id/tv_most_hours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/clear_blue"
                     android:textSize="50sp"
+                    android:gravity="center"
                     android:text="00"/>
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,25 +119,29 @@
                     android:textSize="18sp"
                     android:text="@string/hours"/>
             </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text=":"
                 android:textSize="50sp"
                 android:gravity="top"
-                android:textColor="@color/clear_blue"/>
+                android:textColor="@color/clear_blue"
+                android:id="@+id/textView3" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/tvSmallCountMinutes"
+                    android:id="@+id/tv_most_minutes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/clear_blue"
                     android:textSize="50sp"
+                    android:gravity="center"
                     android:text="00"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,25 +149,24 @@
                     android:textSize="18sp"
                     android:text="@string/minutes"/>
             </LinearLayout>
-
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text=":"
                 android:textSize="50sp"
                 android:textColor="@color/clear_blue"/>
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center">
                 <TextView
-                    android:id="@+id/tvSmallCountSeconds"
+                    android:id="@+id/tv_most_seconds"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/clear_blue"
                     android:textSize="50sp"
+                    android:gravity="center"
                     android:text="00"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -121,11 +182,65 @@
             android:textColor="@color/greyish_brown"
             android:text="@string/notify_total_donation"
             android:textSize="20sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tv_total_hours"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/clear_blue"
+                    android:textSize="50sp"
+                    android:text="00"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/clear_blue"
+                    android:textSize="18sp"
+                    android:text="@string/hours"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=":"
+                android:textSize="50sp"
+                android:gravity="top"
+                android:textColor="@color/clear_blue"/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/tv_total_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/clear_blue"
+                    android:textSize="50sp"
+                    android:text="00"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/clear_blue"
+                    android:textSize="18sp"
+                    android:text="@string/minutes"/>
+            </LinearLayout>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/clear_blue"
+            android:layout_marginTop="15dp"
             android:gravity="right">
             <Button
                 android:layout_width="wrap_content"
@@ -141,5 +256,6 @@
                 android:text="@string/notify_button_view"
                 android:background="@color/clear_blue"/>
         </LinearLayout>
+      </LinearLayout> <!-- end expand layout -->
     </LinearLayout>
 </LinearLayout>

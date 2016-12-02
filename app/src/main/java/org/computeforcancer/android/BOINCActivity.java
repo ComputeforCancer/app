@@ -108,8 +108,7 @@ public class BOINCActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {  
         if(Logging.DEBUG) Log.d(Logging.TAG, "BOINCActivity onCreate()"); 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main); 
-
+        setContentView(R.layout.main);
         // setup navigation bar
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -120,6 +119,7 @@ public class BOINCActivity extends ActionBarActivity {
 				// display view for selected nav drawer item
 				dispatchNavBarOnClick(mDrawerListAdapter.getItem(position),false);
 			}});
+
 		mDrawerListAdapter = new NavDrawerListAdapter(getApplicationContext());
 		mDrawerList.setAdapter(mDrawerListAdapter);
 		// enabling action bar app icon and behaving it as toggle button

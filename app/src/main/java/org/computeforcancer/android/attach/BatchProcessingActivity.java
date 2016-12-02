@@ -24,6 +24,8 @@ import org.computeforcancer.android.R;
 import org.computeforcancer.android.utils.*;
 import org.computeforcancer.android.BOINCActivity;
 import org.computeforcancer.android.attach.ProjectAttachService.ProjectAttachWrapper;
+
+import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -31,11 +33,11 @@ import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
-public class BatchProcessingActivity extends FragmentActivity{
+public class BatchProcessingActivity extends Activity {
 	
 	private ProjectAttachService attachService = null;
 	private boolean asIsBound = false;
@@ -109,16 +111,18 @@ public class BatchProcessingActivity extends FragmentActivity{
 	public void continueClicked() {
 		boolean conflicts = attachService.unresolvedConflicts();
 		if(Logging.DEBUG) Log.d(Logging.TAG, "BatchProcessingActivity.continueClicked: conflicts? " + conflicts);
-		
 		if(conflicts) {
 			// conflicts occured, bring up resolution screen
 			if(Logging.DEBUG) Log.d(Logging.TAG, "AttachProjectAsyncTask: conflicts exists, open resolution activity...");
-			Intent intent = new Intent(BatchProcessingActivity.this, BatchConflictListActivity.class);
-			intent.putExtra("conflicts", true);
+			Intent intent = new Intent(BatchProcessingActivity.this, CredentialInputActivity.class);
+			//intent.putExtra("conflicts", true);
+			Toast.makeText(this, getResources().getText(R.string.attachproject_conflicts_desc),
+					Toast.LENGTH_LONG).show();
 			startActivity(intent);
 		} else {
 			// everything successful, go back to projects screen and clear history
 			Intent intent = new Intent(this, BOINCActivity.class);
+			//Intent intent = new Intent(this, TestActivity.class); //only for test
 			// add flags to return to main activity and clearing all others and clear the back stack
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <!-- white background with opacity when popup -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:visibility="visible"
-        android:alpha="0.65"/>
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="120dp">
     <!-- popup window -->
-
     <LinearLayout
         android:id="@+id/popUpWindow"
         android:layout_width="match_parent"
@@ -22,7 +12,6 @@
         android:visibility="visible"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
-        android:layout_marginTop="55dp"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,6 +24,7 @@
 
                 <ImageView
                     android:id="@+id/ivLeft"
+                    android:visibility="gone"
                     android:background="@drawable/popup_top_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -46,7 +36,7 @@
                 android:layout_weight="1">
                 <ImageView
                     android:id="@+id/ivMiddle"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:background="@drawable/popup_top_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -97,7 +87,6 @@
                 android:textSize="18sp"
                 android:textColor="@color/dark_white"
                 android:text="@string/popup_end"/>
-
         </LinearLayout>
     </LinearLayout> <!-- end popup -->
-</RelativeLayout>
+</LinearLayout>

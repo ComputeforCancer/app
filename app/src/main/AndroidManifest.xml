@@ -44,6 +44,11 @@
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:exported="true" />
+        <activity
+            android:name="org.computeforcancer.android.TestActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:exported="true" />
         <activity android:name="org.computeforcancer.android.attach.AcctMgrFragment" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,9 +61,11 @@
         <activity
             android:name="org.computeforcancer.android.attach.CredentialInputActivity"
             android:theme="@style/Theme.Styled.NoActionBar"
+            android:noHistory="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="org.computeforcancer.android.attach.BatchProcessingActivity"
+            android:noHistory="true"
             android:theme="@style/Theme.Styled.NoActionBar" />
         <activity
             android:name="org.computeforcancer.android.attach.BatchConflictListActivity"

@@ -53,7 +53,7 @@
                     android:layout_marginTop="30dp"
                     android:paddingRight="20dp">
                     <Button
-                        android:id="@+id/btnMore"
+                        android:id="@+id/od_no_thanks_b"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:text="@string/onboarding_no_thank"
@@ -64,10 +64,10 @@
                         android:layout_alignParentLeft="true"
                         android:background="@drawable/shape_sign_in_transparent_button"/>
                     <Button
-                        android:id="@+id/btnDoit"
+                        android:id="@+id/od_sure_b"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/onboarding_tell_me_more"
+                        android:text="@string/onboarding_sure"
                         android:textColor="@color/sign_button_text_color"
                         android:layout_alignParentRight="true"
                         android:textSize="15sp"

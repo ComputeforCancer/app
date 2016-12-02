@@ -427,6 +427,7 @@
     <string name="onboarding_research">Cancer Researchers will use your device to power their calculations.</string>
     <string name="onboarding_difference">Go to sleep knowing you’re making a difference in world. </string>
     <string name="onboarding_tell_me_more">TELL ME MORE</string>
+    <string name="onboarding_sure">SURE</string>
     <string name="onboarding_letsdoit">LET\'S DO IT</string>
 
     <string name="onboarding_dont_worry">Don\’t Worry!</string>
@@ -458,4 +459,14 @@
     <string name="notify_button_view">VIEW</string>
     <string name="notify_donations">Most resent donation:</string>
     <string name="notify_total_donation">Total donations over time:</string>
+
+    <string name="daily_progress">Daily Progress Update</string>
+    <string name="tap_to_view">Tap to view details</string>
+
+    <string name="menu_settings_text">Settings</string>
+    <string name="menu_about_text">About</string>
+
+    <!-- tell me more -->
+    <string name="tell_me_more_top_text">Ready to join the fight against cancer?</string>
+    <string name="tell_me_more_bottom_text">Right now,scientists all over the world are racing to find a cure for cancer.</string>
 </resources>

@@ -28,6 +28,14 @@ public class PreSignInFragment extends AbstractBaseFragment {
             }
         });
 
+        Button getStarted = (Button) mRootView.findViewById(R.id.psl_get_started_b);
+        getStarted.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((CredentialInputActivity)getActivity()).setPagerVisibility(true);
+            }
+        });
+
         return mRootView;
     }
 
