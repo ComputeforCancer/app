@@ -90,6 +90,7 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:background="@drawable/gradient_panel"
+                        android:padding="5dp"
                         android:gravity="center_vertical">
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -98,11 +99,9 @@
                             android:layout_weight="1">
                             <ImageView
                                 android:id="@+id/ivWifi"
-                                android:src="@drawable/ic_network_wifi_24_px"
+                                android:background="@drawable/ic_network_wifi_24_px"
                                 android:layout_width="wrap_content"
-                                android:onClick="onTopIconsClick"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp"/>
+                                android:layout_height="wrap_content"/>
                         </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -112,7 +111,6 @@
                             <ImageView
                                 android:id="@+id/ivPower"
                                 android:background="@drawable/ic_power_24_px"
-                                android:onClick="onTopIconsClick"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -125,7 +123,6 @@
                             <ImageView
                                 android:id="@+id/ivBattery"
                                 android:background="@drawable/ic_battery_full_24_px"
-                                android:onClick="onTopIconsClick"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>

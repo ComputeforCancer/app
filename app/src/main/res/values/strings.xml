@@ -469,4 +469,8 @@
     <!-- tell me more -->
     <string name="tell_me_more_top_text">Ready to join the fight against cancer?</string>
     <string name="tell_me_more_bottom_text">Right now,scientists all over the world are racing to find a cure for cancer.</string>
+    <string name="ready_to_help">I\'M READY TO HELP</string>
+
+    <!-- main -->
+    <string name="header">Compute for Cancer</string>
 </resources>

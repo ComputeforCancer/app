@@ -25,7 +25,7 @@ public class OnBoardingThirdFragment extends AbstractBaseFragment {
             @Override
             public void onClick(View view) {
                 ((CredentialInputActivity)getActivity()).setPagerVisibility(false);
-                ((CredentialInputActivity)getActivity()).openPage(0);
+                ((CredentialInputActivity)getActivity()).openPage(0, true);
             }
         });
 
@@ -33,9 +33,9 @@ public class OnBoardingThirdFragment extends AbstractBaseFragment {
         sureB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((CredentialInputActivity)getActivity()).openFragment(new SignInFragment(), true);
+                ((CredentialInputActivity)getActivity()).openFragment(new SignInFragment(), false);
                 ((CredentialInputActivity)getActivity()).setPagerVisibility(false);
-                ((CredentialInputActivity)getActivity()).openPage(0);
+                ((CredentialInputActivity)getActivity()).openPage(0, false);
             }
         });
 

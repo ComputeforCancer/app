@@ -24,7 +24,7 @@ public class PreSignInFragment extends AbstractBaseFragment {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((CredentialInputActivity)getActivity()).openFragment(new SignInFragment(), true);
+                ((CredentialInputActivity)getActivity()).openFragment(new SignInFragment(), false);
             }
         });
 

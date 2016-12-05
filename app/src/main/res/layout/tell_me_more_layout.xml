@@ -28,8 +28,21 @@
         android:layout_height="wrap_content"
         android:textSize="18dp"
         android:gravity="center"
+        android:layout_above="@+id/tmml_ready_b"
         android:text="@string/tell_me_more_bottom_text"
-        android:layout_alignParentBottom="true"
         android:textColor="@color/white"/>
+
+    <Button
+        android:id="@+id/tmml_ready_b"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="@string/ready_to_help"
+        android:textColor="@color/white"
+        android:layout_marginTop="5dp"
+        android:padding="5dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shape_sign_in_transparent_button"/>
 
 </RelativeLayout>

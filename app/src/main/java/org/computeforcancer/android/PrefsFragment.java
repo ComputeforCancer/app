@@ -45,11 +45,12 @@ import org.computeforcancer.android.adapter.PrefsListItemWrapper;
 import org.computeforcancer.android.adapter.PrefsListItemWrapperBool;
 import org.computeforcancer.android.adapter.PrefsListItemWrapperValue;
 import org.computeforcancer.android.adapter.PrefsSelectionDialogListAdapter;
+import org.computeforcancer.android.fragments.AbstractBaseFragment;
 import org.computeforcancer.android.utils.Logging;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
-public class PrefsFragment extends Fragment {
+public class PrefsFragment extends AbstractBaseFragment {
 	
 	private ListView lv;
 	private PrefsListAdapter listAdapter;
@@ -505,7 +506,12 @@ public class PrefsFragment extends Fragment {
 	    builder.append(" </log_flags>\n <options>\n </options>\n</cc_config>");
 		return builder.toString();
 	}
-	
+
+	@Override
+	public String getTAG() {
+		return PrefsFragment.class.getSimpleName();
+	}
+
 	public class BoolOnClick implements OnClickListener {
 		
 		private Integer ID;

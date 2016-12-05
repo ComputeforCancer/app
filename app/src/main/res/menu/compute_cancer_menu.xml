@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".TestActivity">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_items"
-        android:icon="@drawable/logo_reversed"
-        android:title=""
-        app:showAsAction="always"/>
-        <item
-                android:id="@+id/menu_item_settings"
-                android:icon="@drawable/ic_info_24_px"
-                android:orderInCategory="100"
-                android:title="Settings" />
-        <item
-                android:id="@+id/menu_item_about"
-                android:icon="@drawable/ic_info_24_px"
-                android:orderInCategory="100"
-                android:title="About" />
+        android:id="@+id/menu_item_settings"
+        android:icon="@drawable/ic_info_24_px"
+        android:title="Settings" />
+    <item
+        android:id="@+id/menu_item_about"
+        android:icon="@drawable/ic_info_24_px"
+        android:title="About" />
 
- </menu>
+</menu>

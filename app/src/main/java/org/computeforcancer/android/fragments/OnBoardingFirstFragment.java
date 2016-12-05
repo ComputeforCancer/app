@@ -24,7 +24,16 @@ public class OnBoardingFirstFragment extends AbstractBaseFragment {
         doItB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((CredentialInputActivity)getActivity()).openPage(1);
+                ((CredentialInputActivity)getActivity()).openPage(1, true);
+            }
+        });
+
+        Button moreB = (Button) mRootView.findViewById(R.id.ol_more_b);
+        moreB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((CredentialInputActivity)getActivity()).openFragment(new TellMeMoreFragment(), false);
+                ((CredentialInputActivity)getActivity()).setPagerVisibility(false);
             }
         });
 

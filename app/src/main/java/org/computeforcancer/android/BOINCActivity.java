@@ -33,7 +33,10 @@ import android.os.AsyncTask;
 import android.os.Bundle; 
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;  
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +46,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -56,26 +60,36 @@ import org.computeforcancer.android.attach.SelectionListActivity;
 import org.computeforcancer.android.client.ClientStatus;
 import org.computeforcancer.android.client.Monitor;
 import org.computeforcancer.android.client.IMonitor;
+import org.computeforcancer.android.fragments.AboutFragment;
+import org.computeforcancer.android.fragments.AbstractBaseFragment;
+import org.computeforcancer.android.fragments.MainFragment;
+import org.computeforcancer.android.fragments.PreSignInFragment;
+import org.computeforcancer.android.fragments.SignInFragment;
+import org.computeforcancer.android.fragments.TellMeMoreFragment;
 import org.computeforcancer.android.utils.BOINCDefs;
+import org.computeforcancer.android.utils.CustomPopUpWindow;
 import org.computeforcancer.android.utils.Logging;
 import java.util.ArrayList;
+import java.util.List;
 
-public class BOINCActivity extends ActionBarActivity {
+public class BOINCActivity extends FragmentActivity implements CustomPopupMenu.OnMenuItemClickListener {
 	
 	public static IMonitor monitor;
 	private Integer clientComputingStatus = -1;
 	private Integer numberProjectsInNavList = 0;
 	static Boolean mIsBound = false;
+	private FrameLayout mHolder;
+	private CustomPopUpWindow mPopupWindow;
 	
 	// app title (changes with nav bar selection)
-	private CharSequence mTitle;
+	//private CharSequence mTitle;
 	// nav drawer title
-	private CharSequence mDrawerTitle;
+	//private CharSequence mDrawerTitle;
 	
-	private DrawerLayout mDrawerLayout;
-	private ListView mDrawerList;
-	private ActionBarDrawerToggle mDrawerToggle;
-	private NavDrawerListAdapter mDrawerListAdapter;
+	//private DrawerLayout mDrawerLayout;
+	//private ListView mDrawerList;
+	//private ActionBarDrawerToggle mDrawerToggle;
+	//private NavDrawerListAdapter mDrawerListAdapter;
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 	    public void onServiceConnected(ComponentName className, IBinder service) {
@@ -109,7 +123,12 @@ public class BOINCActivity extends ActionBarActivity {
         if(Logging.DEBUG) Log.d(Logging.TAG, "BOINCActivity onCreate()"); 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+		mHolder = (FrameLayout) findViewById(R.id.main_fragment_holder);
+		openFragment(new MainFragment());
+		showPopup();
+
         // setup navigation bar
+		/*
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
@@ -121,11 +140,11 @@ public class BOINCActivity extends ActionBarActivity {
 			}});
 
 		mDrawerListAdapter = new NavDrawerListAdapter(getApplicationContext());
-		mDrawerList.setAdapter(mDrawerListAdapter);
+		mDrawerList.setAdapter(mDrawerListAdapter);*/
 		// enabling action bar app icon and behaving it as toggle button
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//getSupportActionBar().setHomeButtonEnabled(true);
+/*
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
 				R.drawable.ic_drawer, //nav menu toggle icon
 				R.string.app_name, // nav drawer open - description for accessibility
@@ -145,12 +164,12 @@ public class BOINCActivity extends ActionBarActivity {
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
+*/
 
 		// pre-select fragment
 		// 1. check if explicitly requested fragment present
 		// e.g. after initial project attach.
-		int targetFragId = getIntent().getIntExtra("targetFragment", -1);
+		/*int targetFragId = getIntent().getIntExtra("targetFragment", -1);
 		
 		// 2. if no explicit request, try to restore previous selection
 		if(targetFragId < 0 && savedInstanceState != null)
@@ -164,15 +183,64 @@ public class BOINCActivity extends ActionBarActivity {
 		
 		if(item != null) dispatchNavBarOnClick(item, true);
 		else if(Logging.WARNING) Log.w(Logging.TAG, "onCreate: fragment selection returned null");
-
+*/
         //bind monitor service
         doBindService();
     }
-    
+    /*
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		outState.putInt("navBarSelectionId", mDrawerListAdapter.selectedMenuId);
 		super.onSaveInstanceState(outState);
+	}
+*/
+
+	private void showPopup() {
+		mPopupWindow = new CustomPopUpWindow(BOINCActivity.this, null);
+	}
+
+
+	@Override
+	public void onBackPressed() {
+		List<Fragment> fragments = getSupportFragmentManager().getFragments();
+		if (fragments != null && fragments.size() != 0) {
+			for (Fragment fragment : fragments) {
+				if (fragment != null && fragment.isVisible() && (fragment instanceof PrefsFragment ||
+						fragment instanceof AboutFragment)) {
+					openFragment(new MainFragment());
+					return;
+				}
+			}
+		}
+		super.onBackPressed();
+	}
+
+	public void showPopup(View v) {
+		CustomPopupMenu popup = new CustomPopupMenu(this, v);
+		popup.setOnMenuItemClickListener(this);
+		MenuInflater inflater = popup.getMenuInflater();
+		inflater.inflate(R.menu.compute_cancer_menu, popup.getMenu());
+		popup.show();
+	}
+
+	@Override
+	public boolean onMenuItemClick(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_item_settings:
+				openFragment(new PrefsFragment());
+				return true;
+			case R.id.menu_item_about:
+				openFragment(new AboutFragment());
+				return true;
+			default:
+				return false;
+		}
+	}
+	public void openFragment(final AbstractBaseFragment fragment) {
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		ft.replace(R.id.main_fragment_holder, fragment, fragment.getTAG());
+		ft.commitAllowingStateLoss();
 	}
 
 	@Override
@@ -190,11 +258,11 @@ public class BOINCActivity extends ActionBarActivity {
 		// e.g. after (not initial) project attach
 		super.onNewIntent(intent);
 		// navigate to explicitly requested fragment (e.g. after project attach)
-		int id = intent.getIntExtra("targetFragment", -1);
-    	if(Logging.DEBUG) Log.d(Logging.TAG, "BOINCActivity onNewIntent() for target fragment: " + id);
-    	NavDrawerItem item = mDrawerListAdapter.getItemForId(id);
-    	if(item != null) dispatchNavBarOnClick(item,false);
-    	else if(Logging.WARNING) Log.w(Logging.TAG, "onNewIntent: requested target fragment is null, for id: " + id);
+		//int id = intent.getIntExtra("targetFragment", -1);
+    	//if(Logging.DEBUG) Log.d(Logging.TAG, "BOINCActivity onNewIntent() for target fragment: " + id);
+    	//NavDrawerItem item = mDrawerListAdapter.getItemForId(id);
+    	//if(item != null) dispatchNavBarOnClick(item,false);
+    	//else if(Logging.WARNING) Log.w(Logging.TAG, "onNewIntent: requested target fragment is null, for id: " + id);
 	}
 
 	@Override
@@ -229,20 +297,20 @@ public class BOINCActivity extends ActionBarActivity {
 	public IMonitor getMonitorService() {
 		if(!mIsBound) if(Logging.WARNING) Log.w(Logging.TAG, "Fragment trying to obtain serive reference, but Monitor not bound in BOINCActivity");
 		return monitor;
-	}*/
+	}
 	
 	public void startAttachProjectListActivity() {
 		if(Logging.DEBUG) Log.d(Logging.TAG, "BOINCActivity attempt to start ");
 		startActivity(new Intent(this,SelectionListActivity.class));
 	}
-	
-	/**
+	*/
+	/*
 	 * React to selection of nav bar item
 	 * @param item
 	 * @param position
 	 * @param init
 	 */
-	private void dispatchNavBarOnClick(NavDrawerItem item, boolean init) {
+	/*private void dispatchNavBarOnClick(NavDrawerItem item, boolean init) {
 		// update the main content by replacing fragments
 		if(item == null) {
 			if(Logging.WARNING) Log.w(Logging.TAG, "dispatchNavBarOnClick returns, item null.");
@@ -330,7 +398,7 @@ public class BOINCActivity extends ActionBarActivity {
 
 		if(Logging.DEBUG) Log.d(Logging.TAG, "displayFragmentForNavDrawer() " + item.getTitle());
 	}
-    
+    */
     // tests whether status is available and whether it changed since the last event.
 	private void determineStatus() {
     	try {
@@ -340,14 +408,15 @@ public class BOINCActivity extends ActionBarActivity {
 					// computing status has changed, update and invalidate to force adaption of action items
 					clientComputingStatus = newComputingStatus;
 					supportInvalidateOptionsMenu();
-				}
+				}/*
 				if(numberProjectsInNavList != monitor.getProjects().size())
 					numberProjectsInNavList = mDrawerListAdapter.compareAndAddProjects((ArrayList<Project>)monitor.getProjects());
 				//setAppTitle();
-			} 
+			*/}
     	} catch (Exception e) {}
     }
 
+/*
     public final boolean onKeyDown(final int keyCode, final KeyEvent keyEvent) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             if (this.mDrawerLayout.isDrawerOpen(this.mDrawerList)) {
@@ -396,7 +465,7 @@ public class BOINCActivity extends ActionBarActivity {
 	    if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-	    
+
 	    switch (item.getItemId()) {
 			case R.id.run_mode:
 				if(item.getTitle().equals(getApplication().getString(R.string.menu_run_mode_disable))) {
@@ -434,7 +503,17 @@ public class BOINCActivity extends ActionBarActivity {
 		mTitle = title;
 		getSupportActionBar().setTitle(mTitle);
 	}
-	
+*/
+	private boolean currentState;
+
+	public void stateChanged(boolean run) {
+		if (run) {
+			new WriteClientModeAsync().execute(BOINCDefs.RUN_MODE_AUTO);
+		} else {
+			new WriteClientModeAsync().execute(BOINCDefs.RUN_MODE_NEVER);
+		}
+	}
+
 	private final class WriteClientModeAsync extends AsyncTask<Integer, Void, Boolean> {
 		
 		@Override

@@ -26,6 +26,7 @@
         <item name="actionBarStyle">@style/StyledActionBar</item>
         <item name="actionBarTabStyle">@style/StyledActionBarTabView</item>
         <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:popupBackground">@android:color/white</item>
     	<item name="android:itemBackground">@color/dark_blue</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:textColor">@color/black</item>
@@ -33,6 +34,7 @@
     
     <style name="Theme.Styled.NoActionBar" parent="Theme.Styled">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:itemBackground">@color/white</item>
 	</style>
     
     <style name="StyledActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">

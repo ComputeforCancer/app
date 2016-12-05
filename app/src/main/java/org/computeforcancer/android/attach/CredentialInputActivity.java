@@ -20,6 +20,8 @@
 package org.computeforcancer.android.attach;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.computeforcancer.android.R;
 import org.computeforcancer.android.fragments.AbstractBaseFragment;
 import org.computeforcancer.android.fragments.OnBoardingFirstFragment;
@@ -27,6 +29,7 @@ import org.computeforcancer.android.fragments.OnBoardingSecondFragment;
 import org.computeforcancer.android.fragments.OnBoardingThirdFragment;
 import org.computeforcancer.android.fragments.PreSignInFragment;
 import org.computeforcancer.android.fragments.SignInFragment;
+import org.computeforcancer.android.fragments.TellMeMoreFragment;
 import org.computeforcancer.android.utils.*;
 
 import android.app.Service;
@@ -88,6 +91,9 @@ public class CredentialInputActivity extends FragmentActivity {
     }
 
 	public void setPagerVisibility(boolean setVisible) {
+		if (isPagerVisible == setVisible) {
+			return;
+		}
 		isPagerVisible = setVisible;
 		if (setVisible) {
 			mFrameHolder.setVisibility(View.GONE);
@@ -157,15 +163,29 @@ public class CredentialInputActivity extends FragmentActivity {
 			if (mViewPager.getCurrentItem() != 0) {
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
 			} else {
+				openFragment(new PreSignInFragment(), false);
 				setPagerVisibility(false);
 			}
 		} else {
+			List<Fragment> fragments = getSupportFragmentManager().getFragments();
+			if (fragments != null && fragments.size() != 0) {
+				for (Fragment fragment : fragments) {
+					if (fragment != null && fragment.isVisible() && (fragment instanceof TellMeMoreFragment ||
+							fragment instanceof SignInFragment)) {
+						openFragment(new PreSignInFragment(), false);
+						return;
+					}
+				}
+			}
 			super.onBackPressed();
 		}
 	}
 
-	public void openPage(int page) {
+	public void openPage(int page, boolean makePagerVisible) {
 		mViewPager.setCurrentItem(page);
+		if (!isPagerVisible && makePagerVisible) {
+			setPagerVisibility(true);
+		}
 	}
 
 	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
