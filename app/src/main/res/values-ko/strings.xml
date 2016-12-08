@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <!--app global-->
-  <string name="app_name">BOINC</string>
+  <string name="app_name">Compute for Cancer</string>
   <!--generic. used by multiple Activities/tabs-->
   <string name="generic_loading">로딩 중! 잠시 기다려 주세요…</string>
   <string name="generic_button_continue">계속</string>

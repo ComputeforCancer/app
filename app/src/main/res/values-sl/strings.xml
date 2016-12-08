@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="app_name">BOINC</string>
+  <string name="app_name">Compute for Cancer</string>
   <string name="attachproject_list_acctmgr_button">Adaugă manager de cont</string>
   <string name="attachproject_login_header_platform">Android:</string>
   <string name="attachproject_login_platform_supported">Этот проект поддерживает устройства на базе Android</string>

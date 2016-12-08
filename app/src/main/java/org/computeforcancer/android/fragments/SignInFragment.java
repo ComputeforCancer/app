@@ -1,11 +1,14 @@
 package org.computeforcancer.android.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.computeforcancer.android.R;
 import org.computeforcancer.android.attach.CredentialInputActivity;
@@ -28,6 +31,7 @@ public class SignInFragment extends AbstractBaseFragment {
         mRootView = inflater.inflate(R.layout.sign_in_layout, viewGroup, false);
 
         Button signInButton = (Button) mRootView.findViewById(R.id.sil_sign_in_b);
+        TextView forgotPasswordTv = (TextView) mRootView.findViewById(R.id.tvForgotPassword);
         Bundle arguments = getArguments();
         String email = arguments.getString(KEY_EMAIL);
         String name = arguments.getString(KEY_NAME);
@@ -44,6 +48,13 @@ public class SignInFragment extends AbstractBaseFragment {
             @Override
             public void onClick(View v) {
                 ((CredentialInputActivity)getActivity()).signIn(emailET.getText().toString(), nameET.getText().toString(), pwdET.getText().toString());
+            }
+        });
+        forgotPasswordTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.worldcommunitygrid.org/login/forgotPassword.do"));
+                startActivity(browserIntent);
             }
         });
 

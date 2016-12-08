@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="app_name">BOINC</string>
+  <string name="app_name">Compute for Cancer</string>
   <string name="generic_loading">Зареждане! Моля изчакайте…</string>
   <string name="attachproject_list_header">Изброете проект:</string>
   <string name="attachproject_list_manual_button">Добавете проект с URL</string>

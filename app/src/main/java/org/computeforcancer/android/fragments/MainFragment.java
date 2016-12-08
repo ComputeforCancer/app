@@ -17,10 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import org.computeforcancer.android.BOINCActivity;
 import org.computeforcancer.android.R;
-import org.computeforcancer.android.attach.CredentialInputActivity;
+import org.computeforcancer.android.utils.Logging;
+import org.computeforcancer.android.utils.SharedPrefs;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Maksym Shpyl on 05.12.2016.
@@ -45,19 +50,45 @@ public class MainFragment extends AbstractBaseFragment {
         ivPower = (ImageView) mRootView.findViewById(R.id.ivPower);
         registerPlugInReceiver();
         registerWifiReceiver();
-/*
-        ImageView readyB = (ImageView) mRootView.findViewById(R.id.menu);
-        readyB.setOnClickListener(new View.OnClickListener() {
+
+        Button tellFriendsB = (Button) mRootView.findViewById(R.id.btnTellFriends);
+        tellFriendsB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popup = new PopupMenu(getContext(), v);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.compute_cancer_menu, popup.getMenu());
-                popup.show();
+                shareClicked();
             }
-        });*/
+        });
 
         return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("TEST", "super.onResume();");
+        updateUI(SharedPrefs.getSharedPrefs(getContext()).getLastSessionTime(),
+                SharedPrefs.getSharedPrefs(getContext()).getDonationTime());
+    }
+
+    public void updateUI(long lastSession, long overall) {
+        SimpleDateFormat fmtOut = new SimpleDateFormat("MMM dd");
+        ((TextView) mRootView.findViewById(R.id.tvLastSessionState)).setText(
+                fmtOut.format(new Date()).toUpperCase());
+
+        ((TextView) mRootView.findViewById(R.id.session_hours)).setText(
+                String.format("%02d", TimeUnit.MILLISECONDS.toHours(lastSession)));
+        ((TextView) mRootView.findViewById(R.id.session_minutes)).setText(
+                String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(lastSession) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(lastSession))));
+        ((TextView) mRootView.findViewById(R.id.session_seconds)).setText(
+                String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(lastSession) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(lastSession))));
+
+        ((TextView) mRootView.findViewById(R.id.totaltime_hours)).setText(
+                String.format("%02d", TimeUnit.MILLISECONDS.toHours(overall)));
+        ((TextView) mRootView.findViewById(R.id.totaltime_minutes)).setText(
+                String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(overall) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(overall))));
     }
 
     private void registerPlugInReceiver() {
@@ -73,7 +104,6 @@ public class MainFragment extends AbstractBaseFragment {
                 int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
                 int batteryPct = level * 100 / scale;
                 batteryIcon(batteryPct < 90);
-                Log.d("TEST", "batteryPct " + batteryPct);
             }
         };
         Intent intent = getActivity().registerReceiver(mPlugInReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -94,6 +124,25 @@ public class MainFragment extends AbstractBaseFragment {
         } else {
             ivPower.setBackgroundResource(R.drawable.ic_power_24_px);
         }
+    }
+
+    private void shareClicked() {
+        if(Logging.DEBUG) Log.d(Logging.TAG, "shareClicked.");
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+        long overall = SharedPrefs.getSharedPrefs(getContext()).getDonationTime();
+        String hours =
+                String.format("%02d", TimeUnit.MILLISECONDS.toHours(overall));
+        String minutes =
+                String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(overall) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(overall)));
+        // Add data to the intent, the receiving app will decide what to do with it.
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.social_invite_content_title));
+        intent.putExtra(Intent.EXTRA_TEXT, String.format(getString(R.string.share), hours, minutes));
+
+        startActivity(Intent.createChooser(intent, getString(R.string.social_invite_intent_title)));
     }
 
     private void batteryIcon(boolean setRed) {
@@ -125,23 +174,10 @@ public class MainFragment extends AbstractBaseFragment {
     }
 
     private void wifiIcon(boolean setRed) {
-        Log.d("TEST", "wifiIcon " + setRed);
         if (setRed) {
             ivWifi.setBackgroundResource(R.drawable.ic_red_network_wifi_24_px);
         } else {
             ivWifi.setBackgroundResource(R.drawable.ic_network_wifi_24_px);
-        }
-    }
-
-    private void setStateButtonsColor (boolean state) {
-        if(!state) {
-            ivPower.setBackgroundResource(R.drawable.ic_red_power_24_px);
-            ivWifi.setBackgroundResource(R.drawable.ic_red_network_wifi_24_px);
-            ivBattery.setBackgroundResource(R.drawable.ic_red_battery_full_24_px);
-        } else {
-            ivPower.setBackgroundResource(R.drawable.ic_power_24_px);
-            ivWifi.setBackgroundResource(R.drawable.ic_network_wifi_24_px);
-            ivBattery.setBackgroundResource(R.drawable.ic_battery_full_24_px);
         }
     }
 

@@ -73,7 +73,11 @@ import org.computeforcancer.android.AcctMgrInfo;
  * - holds singleton of client status data model and applications persistent preferences
  */
 public class Monitor extends Service {
-	
+
+	public static String DONATION_TIME_MESSAGE = "org.computeforcancer.android.donation.message";
+	public static String DONATION_LAST_SESSION = "org.computeforcancer.android.donation.last";
+	public static String DONATION_OVERALL = "org.computeforcancer.android.donation.overall";
+
 	private static BoincMutex mutex = new BoincMutex(); // holds the BOINC mutex, only compute if acquired
 	private static ClientStatus clientStatus; //holds the status of the client as determined by the Monitor
 	private static AppPreferences appPrefs; //hold the status of the app, controlled by AppPreferences
@@ -365,7 +369,8 @@ public class Monitor extends Service {
     		}
     	}
     }
-    
+
+	private long prevTime, currTime, temp;
     /**
      * Reads client status via RPCs
      * Optimized to retrieve only subset of information (required to determine wakelock state) if screen is turned off
@@ -404,7 +409,7 @@ public class Monitor extends Service {
 				}
 				
 				// update notices notification
-				NoticeNotification.getInstance(getApplicationContext()).update(Monitor.getClientStatus().getRssNotices(), Monitor.getAppPrefs().getShowNotificationForNotices());
+				//NoticeNotification.getInstance(getApplicationContext()).update(Monitor.getClientStatus().getRssNotices(), Monitor.getAppPrefs().getShowNotificationForNotices());
 				
 				// check whether monitor is still intended to update, if not, skip broadcast and exit...
 				if(updateBroadcastEnabled) {
@@ -425,13 +430,42 @@ public class Monitor extends Service {
     		if(Logging.VERBOSE) Log.d(Logging.TAG,"readClientStatus(): computation enabled: " + computing);
 			Monitor.getClientStatus().setWifiLock(computing);
 			Monitor.getClientStatus().setWakeLock(computing);
-			ClientNotification.getInstance(getApplicationContext()).update(Monitor.getClientStatus(), this, computing);
+			if (computing) {
+				currTime = System.currentTimeMillis();
+				if (currTime - prevTime < 14000) {
+					temp = SharedPrefs.getSharedPrefs(getApplicationContext()).getDonationTime();
+					SharedPrefs.getSharedPrefs(getApplicationContext()).putDonationTime(temp +
+							currTime - prevTime);
+				}
+				prevTime = currTime;
+				if (SharedPrefs.getSharedPrefs(getApplicationContext()).getStartSessionTime() == 0) {
+					SharedPrefs.getSharedPrefs(getApplicationContext()).putStartSessionTime(currTime);
+				}
+			} else {
+				if (SharedPrefs.getSharedPrefs(getApplicationContext()).getStartSessionTime() != 0) {
+					long sessionStart = SharedPrefs.getSharedPrefs(getApplicationContext()).getStartSessionTime();
+					SharedPrefs.getSharedPrefs(getApplicationContext()).putLastSessionTime(
+							System.currentTimeMillis() - sessionStart
+					);
+					sendDonationTimeMessage(System.currentTimeMillis() - sessionStart,
+							SharedPrefs.getSharedPrefs(getApplicationContext()).getDonationTime());
+					SharedPrefs.getSharedPrefs(getApplicationContext()).putStartSessionTime(0);
+				}
+			}
+			//ClientNotification.getInstance(getApplicationContext()).update(Monitor.getClientStatus(), this, computing);
 			
 		}catch(Exception e) {
 			if(Logging.ERROR) Log.e(Logging.TAG, "Monitor.readClientStatus excpetion: " + e.getMessage(),e);
 		}
     }
-    
+
+	public void sendDonationTimeMessage(long lastSession, long overall) {
+		Intent intent = new Intent(DONATION_TIME_MESSAGE);
+		intent.putExtra(DONATION_LAST_SESSION, lastSession);
+		intent.putExtra(DONATION_OVERALL, overall);
+		getApplicationContext().sendStickyBroadcast(intent);
+	}
+
     // reports current device status to the client via rpc
     // client uses data to enforce preferences, e.g. suspend on battery
     /**

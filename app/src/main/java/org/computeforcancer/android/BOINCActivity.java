@@ -69,6 +69,8 @@ import org.computeforcancer.android.fragments.TellMeMoreFragment;
 import org.computeforcancer.android.utils.BOINCDefs;
 import org.computeforcancer.android.utils.CustomPopUpWindow;
 import org.computeforcancer.android.utils.Logging;
+import org.computeforcancer.android.utils.SharedPrefs;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,10 +267,40 @@ public class BOINCActivity extends FragmentActivity implements CustomPopupMenu.O
     	//else if(Logging.WARNING) Log.w(Logging.TAG, "onNewIntent: requested target fragment is null, for id: " + id);
 	}
 
+	private BroadcastReceiver mDonatedTimeReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d("TEST", "onReceive");
+			final long lastSession = intent.getLongExtra(Monitor.DONATION_LAST_SESSION, 0);
+			final long overall = intent.getLongExtra(Monitor.DONATION_OVERALL, 0);
+
+			SharedPrefs.getSharedPrefs(BOINCActivity.this).putLastSessionTime(lastSession);
+			SharedPrefs.getSharedPrefs(BOINCActivity.this).putDonationTime(overall);
+
+			List<Fragment> fragments = getSupportFragmentManager().getFragments();
+			if (fragments != null && fragments.size() != 0) {
+				for (Fragment fragment : fragments) {
+					if (fragment != null && fragment.isVisible() && (fragment instanceof MainFragment)) {
+						final Fragment mainFragment = fragment;
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								((MainFragment)mainFragment).updateUI(lastSession, overall);
+							}
+						});
+						return;
+					}
+				}
+			}
+		}
+	};
+	private IntentFilter mDonatedTimeFilter = new IntentFilter(Monitor.DONATION_TIME_MESSAGE);
+
 	@Override
 	protected void onResume() { // gets called by system every time activity comes to front. after onCreate upon first creation
 	    super.onResume();
-	    registerReceiver(mClientStatusChangeRec, ifcsc);
+		registerReceiver(mClientStatusChangeRec, ifcsc);
+		registerReceiver(mDonatedTimeReceiver, mDonatedTimeFilter);
 	    determineStatus();
 	}
 
@@ -276,7 +308,8 @@ public class BOINCActivity extends FragmentActivity implements CustomPopupMenu.O
 	protected void onPause() { // gets called by system every time activity loses focus.
     	if(Logging.VERBOSE) Log.v(Logging.TAG, "BOINCActivity onPause()");
 	    super.onPause();
-	    unregisterReceiver(mClientStatusChangeRec);
+		unregisterReceiver(mClientStatusChangeRec);
+		unregisterReceiver(mDonatedTimeReceiver);
 	}
 
 	private void doBindService() {
@@ -402,7 +435,10 @@ public class BOINCActivity extends FragmentActivity implements CustomPopupMenu.O
     // tests whether status is available and whether it changed since the last event.
 	private void determineStatus() {
     	try {
-			if(mIsBound) { 
+			if(mIsBound) {
+				monitor.setAutostart(SharedPrefs.getSharedPrefs(BOINCActivity.this).getAutoStart());
+				BOINCActivity.monitor.setRunMode(SharedPrefs.getSharedPrefs(BOINCActivity.this).getAutoStart()
+						? BOINCDefs.RUN_MODE_AUTO : BOINCDefs.RUN_MODE_NEVER);
 				Integer newComputingStatus = monitor.getComputingStatus();
 				if(newComputingStatus != clientComputingStatus) {
 					// computing status has changed, update and invalidate to force adaption of action items

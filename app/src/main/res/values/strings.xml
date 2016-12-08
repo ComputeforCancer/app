@@ -20,7 +20,7 @@
 <resources>
 
     <!-- app global -->
-    <string name="app_name">BOINC</string>
+    <string name="app_name">Compute for Cancer</string>
 
     <!-- generic. used by multiple Activities/tabs -->
     <string name="generic_loading">Loading! Please wait&#8230;</string>
@@ -473,4 +473,6 @@
 
     <!-- main -->
     <string name="header">Compute for Cancer</string>
+    <string name="share">I powered %1$s hours, %2$s minutes of cancer research last night with my android phone</string>
+
 </resources>

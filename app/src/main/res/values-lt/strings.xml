@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-  <string name="app_name">BOINC</string>
+  <string name="app_name">Compute for Cancer</string>
   <string name="generic_loading">로딩 중! 잠시 기다려 주세요…</string>
   <string name="attachproject_list_header">프로젝트를 선택:</string>
   <string name="attachproject_list_manual_button">URL로 프로젝트 추가</string>

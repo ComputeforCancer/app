@@ -21,6 +21,8 @@ package org.computeforcancer.android.client;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.computeforcancer.android.utils.SharedPrefs;
+
 /**
  * This class wraps persistent key value pairs.
  * Similar technique to AppPrefs, but with a non-preference incentive.
@@ -29,9 +31,11 @@ public class PersistentStorage {
 	
 	private final String STORE = "Store";
 	private SharedPreferences store;
+	private SharedPrefs sharedPrefs;
 	
 	public PersistentStorage (Context ctx) {
 		this.store = ctx.getSharedPreferences(STORE, 0);
+		sharedPrefs = SharedPrefs.getSharedPrefs(ctx);
 	}
 	
 	public double getLastNotifiedNoticeArrivalTime() {
@@ -53,6 +57,7 @@ public class PersistentStorage {
 		SharedPreferences.Editor editor = store.edit();
 		editor.putString("lastEmailAddress", email);
 		editor.commit();
+		sharedPrefs.putEmail(email);
 	}
 	
 	public String getLastUserName() {

@@ -27,6 +27,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -46,7 +48,10 @@ import org.computeforcancer.android.adapter.PrefsListItemWrapperBool;
 import org.computeforcancer.android.adapter.PrefsListItemWrapperValue;
 import org.computeforcancer.android.adapter.PrefsSelectionDialogListAdapter;
 import org.computeforcancer.android.fragments.AbstractBaseFragment;
+import org.computeforcancer.android.utils.BOINCDefs;
 import org.computeforcancer.android.utils.Logging;
+import org.computeforcancer.android.utils.SharedPrefs;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -54,6 +59,7 @@ public class PrefsFragment extends AbstractBaseFragment {
 	
 	private ListView lv;
 	private PrefsListAdapter listAdapter;
+	private SwitchCompat mAutoStart;
 	
 	private ArrayList<PrefsListItemWrapper> data = new ArrayList<PrefsListItemWrapper>(); //Adapter for list data
 	private GlobalPreferences clientPrefs = null; //preferences of the client, read on every onResume via RPC
@@ -82,6 +88,20 @@ public class PrefsFragment extends AbstractBaseFragment {
 		lv = (ListView) layout.findViewById(R.id.listview);
         listAdapter = new PrefsListAdapter(getActivity(),this,R.id.listview,data);
         lv.setAdapter(listAdapter);
+		mAutoStart = (SwitchCompat)layout.findViewById(R.id.switchRun);
+		mAutoStart.setChecked(SharedPrefs.getSharedPrefs(getContext()).getAutoStart());
+		mAutoStart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+				SharedPrefs.getSharedPrefs(getContext()).putAutoStart(b);
+				try {
+					BOINCActivity.monitor.setAutostart(b);
+					BOINCActivity.monitor.setRunMode(b ? BOINCDefs.RUN_MODE_AUTO : BOINCDefs.RUN_MODE_NEVER);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		return layout;
 	}
 
