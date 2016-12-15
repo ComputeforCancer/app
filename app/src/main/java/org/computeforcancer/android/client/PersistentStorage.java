@@ -28,14 +28,14 @@ import org.computeforcancer.android.utils.SharedPrefs;
  * Similar technique to AppPrefs, but with a non-preference incentive.
  */
 public class PersistentStorage {
-	
+
 	private final String STORE = "Store";
 	private SharedPreferences store;
-	private SharedPrefs sharedPrefs;
+	private Context mContext;
 	
 	public PersistentStorage (Context ctx) {
+		mContext = ctx;
 		this.store = ctx.getSharedPreferences(STORE, 0);
-		sharedPrefs = SharedPrefs.getSharedPrefs(ctx);
 	}
 	
 	public double getLastNotifiedNoticeArrivalTime() {
@@ -57,7 +57,9 @@ public class PersistentStorage {
 		SharedPreferences.Editor editor = store.edit();
 		editor.putString("lastEmailAddress", email);
 		editor.commit();
-		sharedPrefs.putEmail(email);
+		SharedPreferences mSharedPreferences = mContext.getSharedPreferences("org.computeforcancer.android",
+				Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+		mSharedPreferences.edit().putString(SharedPrefs.CURRENT_EMAIL, email).commit();
 	}
 	
 	public String getLastUserName() {

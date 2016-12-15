@@ -52,7 +52,7 @@
             android:theme="@style/NoAnimationTheme"/>
         <activity
             android:name="org.computeforcancer.android.attach.CredentialInputActivity"
-            android:theme="@style/Theme.Styled.NoActionBar"
+            android:theme="@style/NoAnimationTheme"
             android:noHistory="true"
             android:windowSoftInputMode="adjustPan" />
         <activity

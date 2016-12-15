@@ -21,7 +21,7 @@ package org.computeforcancer.android.utils;
 public class Logging {
 	static public String TAG = "BOINC_GUI";
 	
-	static public int LOGLEVEL = 5;
+	static public int LOGLEVEL = -1;
 	static public Boolean ERROR = LOGLEVEL > 0;
 	static public Boolean WARNING = LOGLEVEL > 1;
 	static public Boolean INFO = LOGLEVEL > 2;
@@ -32,7 +32,7 @@ public class Logging {
 	static public Boolean RPC_DATA = false; 
 	
 	static public void setLogLevel(Integer logLevel) {
-		LOGLEVEL = 5;
+		LOGLEVEL = logLevel;
 		ERROR = LOGLEVEL > 0;
 		WARNING = LOGLEVEL > 1;
 		INFO = LOGLEVEL > 2;

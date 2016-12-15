@@ -35,18 +35,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.TextView;
+
 import org.computeforcancer.android.R;
 import org.computeforcancer.android.mutex.BoincMutex;
 import org.computeforcancer.android.AccountIn;
@@ -77,6 +84,7 @@ public class Monitor extends Service {
 	public static String DONATION_TIME_MESSAGE = "org.computeforcancer.android.donation.message";
 	public static String DONATION_LAST_SESSION = "org.computeforcancer.android.donation.last";
 	public static String DONATION_OVERALL = "org.computeforcancer.android.donation.overall";
+	public static String DONATION_EMAIL = "org.computeforcancer.android.donation.email";
 
 	private static BoincMutex mutex = new BoincMutex(); // holds the BOINC mutex, only compute if acquired
 	private static ClientStatus clientStatus; //holds the status of the client as determined by the Monitor
@@ -371,12 +379,13 @@ public class Monitor extends Service {
     }
 
 	private long prevTime, currTime, temp;
+	private volatile long startSessionTime;
     /**
      * Reads client status via RPCs
      * Optimized to retrieve only subset of information (required to determine wakelock state) if screen is turned off
      * @param forceCompleteUpdate forces update of entire status information, regardless of screen status
      */
-    private void readClientStatus(Boolean forceCompleteUpdate) {
+    private synchronized void readClientStatus(Boolean forceCompleteUpdate) {
     	try{
     		CcStatus status; // read independently of screen status
     		
@@ -430,26 +439,53 @@ public class Monitor extends Service {
     		if(Logging.VERBOSE) Log.d(Logging.TAG,"readClientStatus(): computation enabled: " + computing);
 			Monitor.getClientStatus().setWifiLock(computing);
 			Monitor.getClientStatus().setWakeLock(computing);
-			if (computing) {
+			SharedPreferences mSharedPreferences = getApplicationContext().getSharedPreferences("org.computeforcancer.android",
+					Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+			//Log.d("TEST", "deviceStatus.getStatus().user_active " + deviceStatus.getStatus().user_active);
+			if (computing && !deviceStatus.getStatus().user_active) {
+				//Log.d("TEST", "computing");
 				currTime = System.currentTimeMillis();
 				if (currTime - prevTime < 14000) {
-					temp = SharedPrefs.getSharedPrefs(getApplicationContext()).getDonationTime();
-					SharedPrefs.getSharedPrefs(getApplicationContext()).putDonationTime(temp +
-							currTime - prevTime);
+					temp = mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0);;
+					//Log.d("TEST", "1get DONATION_TIME " + temp);
+					//Log.d("TEST", "1put DONATION_TIME " + (temp +
+					//		currTime - prevTime));
+					mSharedPreferences.edit().putLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), temp +
+							currTime - prevTime).commit();
 				}
 				prevTime = currTime;
-				if (SharedPrefs.getSharedPrefs(getApplicationContext()).getStartSessionTime() == 0) {
-					SharedPrefs.getSharedPrefs(getApplicationContext()).putStartSessionTime(currTime);
+				//Log.d("TEST", "1get START_SESSION_TIME " + startSessionTime);
+				if (startSessionTime == 0) {
+					//Log.d("TEST", "1put START_SESSION_TIME " + currTime);
+					startSessionTime = currTime;
 				}
 			} else {
-				if (SharedPrefs.getSharedPrefs(getApplicationContext()).getStartSessionTime() != 0) {
-					long sessionStart = SharedPrefs.getSharedPrefs(getApplicationContext()).getStartSessionTime();
-					SharedPrefs.getSharedPrefs(getApplicationContext()).putLastSessionTime(
-							System.currentTimeMillis() - sessionStart
-					);
-					sendDonationTimeMessage(System.currentTimeMillis() - sessionStart,
-							SharedPrefs.getSharedPrefs(getApplicationContext()).getDonationTime());
-					SharedPrefs.getSharedPrefs(getApplicationContext()).putStartSessionTime(0);
+				//Log.d("TEST", "2get START_SESSION_TIME " + startSessionTime);
+				if (startSessionTime != 0) {
+					currTime = System.currentTimeMillis();
+					mSharedPreferences.edit().putLong(SharedPrefs.LAST_SESSION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), currTime - startSessionTime).commit();
+
+					//Log.d("TEST", "2get DONATION_TIME " + mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0));
+
+					temp = mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0);;
+					mSharedPreferences.edit().putLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), temp +
+							currTime - prevTime).commit();
+					prevTime = currTime;
+
+					sendDonationTimeMessage(mSharedPreferences.getLong(SharedPrefs.LAST_SESSION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0),
+							mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0), mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""));
+					//Log.d("TEST", "2put START_SESSION_TIME " + 0);
+					startSessionTime = 0;
+					//Log.d("TEST", "System.currentTimeMillis() " + System.currentTimeMillis());
+					//Log.d("TEST", "System.getLastNotification() " + mSharedPreferences.getLong(SharedPrefs.LAST_NOTIFICATION, 0));
+					//Log.d("TEST", "System.getNotificationDelay() " + mSharedPreferences.getLong(SharedPrefs.NOTIFICATION_DELAY, Long.MAX_VALUE));
+					if (currTime -
+							mSharedPreferences.getLong(SharedPrefs.LAST_NOTIFICATION, 0) >
+							mSharedPreferences.getLong(SharedPrefs.NOTIFICATION_DELAY, Long.MAX_VALUE)) {
+						mSharedPreferences.edit().putLong(SharedPrefs.LAST_NOTIFICATION, System.currentTimeMillis()).commit();
+						//Log.d("TEST", "get DONATION_TIME " + mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0));
+						sendNotification(mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0));
+					}
 				}
 			}
 			//ClientNotification.getInstance(getApplicationContext()).update(Monitor.getClientStatus(), this, computing);
@@ -459,11 +495,33 @@ public class Monitor extends Service {
 		}
     }
 
-	public void sendDonationTimeMessage(long lastSession, long overall) {
+	private void sendNotification(long overall) {
+		//Log.d("TEST", "sendNotification overall " + overall);
+		String hours =
+				String.format("%02d", TimeUnit.MILLISECONDS.toHours(overall));
+		String minutes =
+				String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(overall) -
+						TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(overall)));
+		NotificationCompat.Builder mBuilder =
+				new NotificationCompat.Builder(this)
+						.setSmallIcon(R.drawable.notify_icon)
+						.setContentTitle(getApplicationContext().getString(R.string.app_name))
+						.setContentText(String.format(getString(R.string.notification), hours, minutes))
+						.setStyle(new NotificationCompat.BigTextStyle()
+								.bigText(String.format(getString(R.string.notification), hours, minutes)));
+
+		NotificationManager mNotificationManager =
+				(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(1, mBuilder.build());
+	}
+
+	public void sendDonationTimeMessage(long lastSession, long overall, String email) {
+		//Log.d("TEST", "sendDonationTimeMessage overall " + overall + "; lastSession" + lastSession);
 		Intent intent = new Intent(DONATION_TIME_MESSAGE);
 		intent.putExtra(DONATION_LAST_SESSION, lastSession);
+		intent.putExtra(DONATION_EMAIL, email);
 		intent.putExtra(DONATION_OVERALL, overall);
-		getApplicationContext().sendStickyBroadcast(intent);
+		getApplicationContext().sendBroadcast(intent);
 	}
 
     // reports current device status to the client via rpc

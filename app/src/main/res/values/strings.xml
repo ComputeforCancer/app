@@ -17,7 +17,7 @@
   You should have received a copy of the GNU Lesser General Public License
   along with BOINC.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <!-- app global -->
     <string name="app_name">Compute for Cancer</string>
@@ -227,6 +227,7 @@
     <string name="prefs_run_automaticaly">Run Automatically</string>
     <string name="prefs_notification_daily">Daily</string>
     <string name="prefs_notification_weekly">Weekly</string>
+    <string name="prefs_notification_monthly">Monthly</string>
     <string name="prefs_automaticaly_bottom_text">Switching this off will turn off autocompute</string>
     <!-- projects tab strings -->
     <string name="projects_loading">Reading projects&#8230;</string>
@@ -474,5 +475,8 @@
     <!-- main -->
     <string name="header">Compute for Cancer</string>
     <string name="share">I powered %1$s hours, %2$s minutes of cancer research last night with my android phone</string>
+    <string name="notification">Total donation over time: %1$s hours, %2$s minutes</string>
+
+    <string name="social_invite_content_url">https://play.google.com/store/apps/details?id=org.computeforcancer.android</string>
 
 </resources>

@@ -55,26 +55,26 @@ public class CredentialInputActivity extends FragmentActivity {
 
 	private ProjectAttachService attachService = null;
 	private boolean asIsBound = false;
-	//private AbstractBaseFragment mCurrentFragment;
 	private String mEmail, mName;
-	private FrameLayout mFrameHolder;
-	private ViewPager mViewPager;
-	private PagerAdapter mPagerAdapter;
-	private boolean isPagerVisible;
+	//private FrameLayout mFrameHolder;
+	//private ViewPager mViewPager;
+	//private PagerAdapter mPagerAdapter;
+	//private boolean isPagerVisible;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);
         if(Logging.DEBUG) Log.d(Logging.TAG, "CredentialInputActivity onCreate"); 
         doBindService();
-        setContentView(R.layout.credential_input_activity);
-		mFrameHolder = (FrameLayout)findViewById(R.id.cia_fragment_holder);
-		mViewPager = (ViewPager)findViewById(R.id.cia_view_pager);
-		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-		mViewPager.setAdapter(mPagerAdapter);
+		//setContentView(R.layout.credential_input_activity);
+		setContentView(R.layout.attach_project_list_layout);
+		//mFrameHolder = (FrameLayout)findViewById(R.id.cia_fragment_holder);
+		//mViewPager = (ViewPager)findViewById(R.id.cia_view_pager);
+		//mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+		//mViewPager.setAdapter(mPagerAdapter);
 		setPagerVisibility(false);
 
-		openFragment(new PreSignInFragment(), false);
+		//openFragment(new PreSignInFragment(), false);
         
         /*CheckBox showPwdCb = (CheckBox) findViewById(R.id.show_pwd_cb);
         showPwdCb.setOnClickListener(new OnClickListener() {
@@ -90,7 +90,7 @@ public class CredentialInputActivity extends FragmentActivity {
         });*/
     }
 
-	public void setPagerVisibility(boolean setVisible) {
+	public void setPagerVisibility(boolean setVisible) {/*
 		if (isPagerVisible == setVisible) {
 			return;
 		}
@@ -101,7 +101,7 @@ public class CredentialInputActivity extends FragmentActivity {
 		} else {
 			mFrameHolder.setVisibility(View.VISIBLE);
 			mViewPager.setVisibility(View.GONE);
-		}
+		}*/
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class CredentialInputActivity extends FragmentActivity {
 	}
 
 	@Override
-	public void onBackPressed() {
+	public void onBackPressed() {/*
 		if (isPagerVisible) {
 			if (mViewPager.getCurrentItem() != 0) {
 				mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
@@ -176,16 +176,16 @@ public class CredentialInputActivity extends FragmentActivity {
 						return;
 					}
 				}
-			}
+			}*/
 			super.onBackPressed();
-		}
+		//}
 	}
 
-	public void openPage(int page, boolean makePagerVisible) {
+	public void openPage(int page, boolean makePagerVisible) {/*
 		mViewPager.setCurrentItem(page);
 		if (!isPagerVisible && makePagerVisible) {
 			setPagerVisibility(true);
-		}
+		}*/
 	}
 
 	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
@@ -226,13 +226,18 @@ public class CredentialInputActivity extends FragmentActivity {
 		intent.putExtra("conflicts", false);
 		startActivity(new Intent(this, BatchConflictListActivity.class));
 	}*/
-	
+	private volatile boolean loginStarted;
+
 	private ServiceConnection mASConnection = new ServiceConnection() {
 	    public void onServiceConnected(ComponentName className, IBinder service) {
 	        // This is called when the connection with the service has been established, getService returns 
 	    	// the Monitor object that is needed to call functions.
 	        attachService = ((ProjectAttachService.LocalBinder)service).getService();
 		    asIsBound = true;
+			if (!loginStarted) {
+				loginStarted = true;
+				signIn("Contact@computeforcancer.org", "computeforcancer.org", "Joinactionworld");
+			}
 		    
 		    ArrayList<String> values = attachService.getUserDefaultValues();
 			mEmail = values.get(0);

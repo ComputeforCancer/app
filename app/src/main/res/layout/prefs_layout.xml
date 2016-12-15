@@ -97,6 +97,13 @@
                     android:layout_height="wrap_content"
                     android:text="@string/prefs_notification_weekly"
                     app:buttonTint="@color/clear_blue" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/checkBtnMonthly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prefs_notification_monthly"
+                    app:buttonTint="@color/clear_blue" />
             </LinearLayout>
         </LinearLayout>
 

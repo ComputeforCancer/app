@@ -26,8 +26,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle; 
@@ -270,28 +272,37 @@ public class BOINCActivity extends FragmentActivity implements CustomPopupMenu.O
 	private BroadcastReceiver mDonatedTimeReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			Log.d("TEST", "onReceive");
+			//Log.d("TEST", "onReceive");
 			final long lastSession = intent.getLongExtra(Monitor.DONATION_LAST_SESSION, 0);
 			final long overall = intent.getLongExtra(Monitor.DONATION_OVERALL, 0);
+			final String email = intent.getStringExtra(Monitor.DONATION_EMAIL);
 
-			SharedPrefs.getSharedPrefs(BOINCActivity.this).putLastSessionTime(lastSession);
-			SharedPrefs.getSharedPrefs(BOINCActivity.this).putDonationTime(overall);
+			SharedPreferences mSharedPreferences = getApplicationContext().getSharedPreferences("org.computeforcancer.android",
+					Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
 
-			List<Fragment> fragments = getSupportFragmentManager().getFragments();
-			if (fragments != null && fragments.size() != 0) {
-				for (Fragment fragment : fragments) {
-					if (fragment != null && fragment.isVisible() && (fragment instanceof MainFragment)) {
-						final Fragment mainFragment = fragment;
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								((MainFragment)mainFragment).updateUI(lastSession, overall);
-							}
-						});
-						return;
+			if (email != null && email.equals(mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""))) {
+				mSharedPreferences.edit().putLong(SharedPrefs.LAST_SESSION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), lastSession).commit();
+
+				//Log.d("TEST", "put DONATION_TIME " + overall);
+				mSharedPreferences.edit().putLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), overall).commit();
+
+				List<Fragment> fragments = getSupportFragmentManager().getFragments();
+				if (fragments != null && fragments.size() != 0) {
+					for (Fragment fragment : fragments) {
+						if (fragment != null && fragment.isVisible() && (fragment instanceof MainFragment)) {
+							final Fragment mainFragment = fragment;
+							runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									((MainFragment)mainFragment).updateUI(lastSession, overall);
+								}
+							});
+							return;
+						}
 					}
 				}
 			}
+
 		}
 	};
 	private IntentFilter mDonatedTimeFilter = new IntentFilter(Monitor.DONATION_TIME_MESSAGE);
@@ -436,9 +447,19 @@ public class BOINCActivity extends FragmentActivity implements CustomPopupMenu.O
 	private void determineStatus() {
     	try {
 			if(mIsBound) {
-				monitor.setAutostart(SharedPrefs.getSharedPrefs(BOINCActivity.this).getAutoStart());
-				BOINCActivity.monitor.setRunMode(SharedPrefs.getSharedPrefs(BOINCActivity.this).getAutoStart()
-						? BOINCDefs.RUN_MODE_AUTO : BOINCDefs.RUN_MODE_NEVER);
+				ConnectivityManager conMngr = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+				android.net.NetworkInfo wifi = conMngr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+				if (!wifi.isConnected()) {
+					BOINCActivity.monitor.setAutostart(false);
+					BOINCActivity.monitor.setRunMode(BOINCDefs.RUN_MODE_NEVER);
+				} else {
+					SharedPreferences mSharedPreferences = getApplicationContext().getSharedPreferences("org.computeforcancer.android",
+							Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+					monitor.setAutostart(mSharedPreferences.getBoolean(SharedPrefs.AUTO_START, true));
+					BOINCActivity.monitor.setRunMode(mSharedPreferences.getBoolean(SharedPrefs.AUTO_START, true)
+							? BOINCDefs.RUN_MODE_AUTO : BOINCDefs.RUN_MODE_NEVER);
+				}
 				Integer newComputingStatus = monitor.getComputingStatus();
 				if(newComputingStatus != clientComputingStatus) {
 					// computing status has changed, update and invalidate to force adaption of action items

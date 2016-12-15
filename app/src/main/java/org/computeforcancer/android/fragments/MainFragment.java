@@ -4,11 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +21,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.computeforcancer.android.BOINCActivity;
 import org.computeforcancer.android.R;
+import org.computeforcancer.android.utils.BOINCDefs;
 import org.computeforcancer.android.utils.Logging;
 import org.computeforcancer.android.utils.SharedPrefs;
 
@@ -65,9 +69,12 @@ public class MainFragment extends AbstractBaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("TEST", "super.onResume();");
-        updateUI(SharedPrefs.getSharedPrefs(getContext()).getLastSessionTime(),
-                SharedPrefs.getSharedPrefs(getContext()).getDonationTime());
+        SharedPreferences mSharedPreferences = getContext().getSharedPreferences("org.computeforcancer.android",
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+        //Log.d("TEST", "onResume get DONATION_TIME " + mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0));
+
+        updateUI(mSharedPreferences.getLong(SharedPrefs.LAST_SESSION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0),
+                mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0));
     }
 
     public void updateUI(long lastSession, long overall) {
@@ -132,7 +139,11 @@ public class MainFragment extends AbstractBaseFragment {
         intent.setType("text/plain");
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 
-        long overall = SharedPrefs.getSharedPrefs(getContext()).getDonationTime();
+        SharedPreferences mSharedPreferences = getContext().getSharedPreferences("org.computeforcancer.android",
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
+        //Log.d("TEST", "get DONATION_TIME " + mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0));
+
+        long overall = mSharedPreferences.getLong(SharedPrefs.DONATION_TIME + mSharedPreferences.getString(SharedPrefs.CURRENT_EMAIL, ""), 0);
         String hours =
                 String.format("%02d", TimeUnit.MILLISECONDS.toHours(overall));
         String minutes =
@@ -160,9 +171,17 @@ public class MainFragment extends AbstractBaseFragment {
                 ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
                 NetworkInfo netInfo = conMan.getActiveNetworkInfo();
                 if (netInfo != null && netInfo.getType() == ConnectivityManager.TYPE_WIFI)
-                    wifiIcon(false);
+                    try {
+                        wifiIcon(false);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
                 else
-                    wifiIcon(true);
+                    try {
+                        wifiIcon(true);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
             }
         };
         IntentFilter filters = new IntentFilter();
@@ -170,13 +189,28 @@ public class MainFragment extends AbstractBaseFragment {
         getActivity().registerReceiver(mWifiReceiver, filters);
         ConnectivityManager conMngr = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
         android.net.NetworkInfo wifi = conMngr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        wifiIcon(!wifi.isConnected());
+        try {
+            wifiIcon(!wifi.isConnected());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void wifiIcon(boolean setRed) {
+    private void wifiIcon(boolean setRed) throws RemoteException {
+        SharedPreferences mSharedPreferences = getContext().getSharedPreferences("org.computeforcancer.android",
+                Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
         if (setRed) {
+            if (BOINCActivity.monitor != null) {
+                BOINCActivity.monitor.setAutostart(false);
+                BOINCActivity.monitor.setRunMode(BOINCDefs.RUN_MODE_NEVER);
+            }
             ivWifi.setBackgroundResource(R.drawable.ic_red_network_wifi_24_px);
         } else {
+            if (BOINCActivity.monitor != null) {
+                BOINCActivity.monitor.setAutostart(mSharedPreferences.getBoolean(SharedPrefs.AUTO_START, true));
+                BOINCActivity.monitor.setRunMode(mSharedPreferences.getBoolean(SharedPrefs.AUTO_START, true)
+                        ? BOINCDefs.RUN_MODE_AUTO : BOINCDefs.RUN_MODE_NEVER);
+            }
             ivWifi.setBackgroundResource(R.drawable.ic_network_wifi_24_px);
         }
     }

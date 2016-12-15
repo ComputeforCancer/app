@@ -23,10 +23,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -56,10 +58,17 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class PrefsFragment extends AbstractBaseFragment {
-	
+
+	private static final long DAY = 1000 * 60 * 60 * 24;
+	private static final long WEEK = DAY * 7;
+	private static final long MONTH = DAY * 30;
+
 	private ListView lv;
 	private PrefsListAdapter listAdapter;
 	private SwitchCompat mAutoStart;
+	private AppCompatRadioButton mDailyButton;
+	private AppCompatRadioButton mWeeklyButton;
+	private AppCompatRadioButton mMonthlyButton;
 	
 	private ArrayList<PrefsListItemWrapper> data = new ArrayList<PrefsListItemWrapper>(); //Adapter for list data
 	private GlobalPreferences clientPrefs = null; //preferences of the client, read on every onResume via RPC
@@ -88,12 +97,14 @@ public class PrefsFragment extends AbstractBaseFragment {
 		lv = (ListView) layout.findViewById(R.id.listview);
         listAdapter = new PrefsListAdapter(getActivity(),this,R.id.listview,data);
         lv.setAdapter(listAdapter);
+		final SharedPreferences mSharedPreferences = getContext().getSharedPreferences("org.computeforcancer.android",
+				Context.MODE_PRIVATE | Context.MODE_MULTI_PROCESS);
 		mAutoStart = (SwitchCompat)layout.findViewById(R.id.switchRun);
-		mAutoStart.setChecked(SharedPrefs.getSharedPrefs(getContext()).getAutoStart());
+		mAutoStart.setChecked(mSharedPreferences.getBoolean(SharedPrefs.AUTO_START, true));
 		mAutoStart.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				SharedPrefs.getSharedPrefs(getContext()).putAutoStart(b);
+				mSharedPreferences.edit().putBoolean(SharedPrefs.AUTO_START, b).commit();
 				try {
 					BOINCActivity.monitor.setAutostart(b);
 					BOINCActivity.monitor.setRunMode(b ? BOINCDefs.RUN_MODE_AUTO : BOINCDefs.RUN_MODE_NEVER);
@@ -102,6 +113,99 @@ public class PrefsFragment extends AbstractBaseFragment {
 				}
 			}
 		});
+
+		mDailyButton = (AppCompatRadioButton)layout.findViewById(R.id.checkBtnDaily);
+		mDailyButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mDailyButton.setChecked(true);
+				mWeeklyButton.setChecked(false);
+				mMonthlyButton.setChecked(false);
+				mSharedPreferences.edit().putLong(SharedPrefs.NOTIFICATION_DELAY, DAY).commit();
+			}
+		});
+		mWeeklyButton = (AppCompatRadioButton)layout.findViewById(R.id.checkBtnWeekly);
+		mWeeklyButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mDailyButton.setChecked(false);
+				mWeeklyButton.setChecked(true);
+				mMonthlyButton.setChecked(false);
+				mSharedPreferences.edit().putLong(SharedPrefs.NOTIFICATION_DELAY, WEEK).commit();
+			}
+		});
+		mMonthlyButton = (AppCompatRadioButton)layout.findViewById(R.id.checkBtnMonthly);
+		mMonthlyButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				mDailyButton.setChecked(false);
+				mWeeklyButton.setChecked(false);
+				mMonthlyButton.setChecked(true);
+				mSharedPreferences.edit().putLong(SharedPrefs.NOTIFICATION_DELAY, MONTH).commit();
+			}
+		});
+		final SwitchCompat notificationSwitch =
+				(SwitchCompat)layout.findViewById(R.id.switchNotifications);
+
+		notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+				if (b) {
+					mDailyButton.setChecked(true);
+					mWeeklyButton.setChecked(false);
+					mMonthlyButton.setChecked(false);
+					mDailyButton.setEnabled(true);
+					mWeeklyButton.setEnabled(true);
+					mMonthlyButton.setEnabled(true);
+					if (mSharedPreferences.getLong(SharedPrefs.NOTIFICATION_DELAY, Long.MAX_VALUE) == Long.MAX_VALUE) {
+						mSharedPreferences.edit().putLong(SharedPrefs.NOTIFICATION_DELAY, DAY).commit();
+					}
+				} else {
+					mDailyButton.setChecked(true);
+					mWeeklyButton.setChecked(false);
+					mMonthlyButton.setChecked(false);
+					mDailyButton.setEnabled(false);
+					mWeeklyButton.setEnabled(false);
+					mMonthlyButton.setEnabled(false);
+					mSharedPreferences.edit().putLong(SharedPrefs.NOTIFICATION_DELAY, Long.MAX_VALUE).commit();
+				}
+			}
+		});
+
+		if (mSharedPreferences.getLong(SharedPrefs.NOTIFICATION_DELAY, Long.MAX_VALUE) == DAY) {
+			notificationSwitch.setChecked(true);
+			mDailyButton.setChecked(true);
+			mWeeklyButton.setChecked(false);
+			mMonthlyButton.setChecked(false);
+			mDailyButton.setEnabled(true);
+			mWeeklyButton.setEnabled(true);
+			mMonthlyButton.setEnabled(true);
+		} else if (mSharedPreferences.getLong(SharedPrefs.NOTIFICATION_DELAY, Long.MAX_VALUE) == WEEK) {
+			notificationSwitch.setChecked(true);
+			mDailyButton.setChecked(false);
+			mWeeklyButton.setChecked(true);
+			mMonthlyButton.setChecked(false);
+			mDailyButton.setEnabled(true);
+			mWeeklyButton.setEnabled(true);
+			mMonthlyButton.setEnabled(true);
+		} else if (mSharedPreferences.getLong(SharedPrefs.NOTIFICATION_DELAY, Long.MAX_VALUE) == MONTH) {
+			notificationSwitch.setChecked(true);
+			mDailyButton.setChecked(false);
+			mWeeklyButton.setChecked(false);
+			mMonthlyButton.setChecked(true);
+			mDailyButton.setEnabled(true);
+			mWeeklyButton.setEnabled(true);
+			mMonthlyButton.setEnabled(true);
+		} else {
+			notificationSwitch.setChecked(false);
+			mDailyButton.setChecked(true);
+			mWeeklyButton.setChecked(false);
+			mMonthlyButton.setChecked(false);
+			mDailyButton.setEnabled(false);
+			mWeeklyButton.setEnabled(false);
+			mMonthlyButton.setEnabled(false);
+		}
+
 		return layout;
 	}
 
