@@ -43,6 +43,7 @@
         android:textSize="15sp"
         android:textStyle="bold"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/shape_sign_in_transparent_button"/>
 
 </RelativeLayout>

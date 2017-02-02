@@ -116,8 +116,8 @@ public class BatchProcessingActivity extends Activity {
 			if(Logging.DEBUG) Log.d(Logging.TAG, "AttachProjectAsyncTask: conflicts exists, open resolution activity...");
 			Intent intent = new Intent(BatchProcessingActivity.this, CredentialInputActivity.class);
 			//intent.putExtra("conflicts", true);
-			Toast.makeText(this, getResources().getText(R.string.attachproject_conflicts_desc),
-					Toast.LENGTH_LONG).show();
+			//Toast.makeText(this, getResources().getText(R.string.attachproject_conflicts_desc),
+			//		Toast.LENGTH_LONG).show();
 			startActivity(intent);
 		} else {
 			// everything successful, go back to projects screen and clear history
@@ -210,7 +210,7 @@ public class BatchProcessingActivity extends Activity {
 	    }
 	}
 	
-	private class AttachProjectAsyncTask extends AsyncTask<Void, String, Void> {
+	private class AttachProjectAsyncTask extends AsyncTask<Void, String, String> {
 		
 		@Override
 		protected void onPreExecute() {
@@ -220,7 +220,7 @@ public class BatchProcessingActivity extends Activity {
 		}
 
 		@Override
-		protected Void doInBackground(Void... arg0) {
+		protected String doInBackground(Void... arg0) {
 			// wait until service is ready
 			while(!attachService.projectConfigRetrievalFinished) {
 		    	if(Logging.DEBUG) Log.d(Logging.TAG, "AttachProjectAsyncTask: project config retrieval has not finished yet, wait...");
@@ -229,14 +229,21 @@ public class BatchProcessingActivity extends Activity {
 	    	if(Logging.DEBUG) Log.d(Logging.TAG, "AttachProjectAsyncTask: project config retrieval finished, continue with attach.");
 			// attach projects, one at a time
 			ArrayList<ProjectAttachWrapper> selectedProjects = attachService.getSelectedProjects();
+			String result = null;
 			for(ProjectAttachWrapper selectedProject: selectedProjects) {
-				if(selectedProject.result != ProjectAttachWrapper.RESULT_READY) continue; // skip already tried projects in batch processing
+				selectedProject.result = ProjectAttachWrapper.RESULT_READY;
+				//if(selectedProject.result != ProjectAttachWrapper.RESULT_READY) continue; // skip already tried projects in batch processing
 	    		publishProgress(selectedProject.info.name);
 	    		int conflict = selectedProject.lookupAndAttach(false);
-	    		if(conflict != ProjectAttachWrapper.RESULT_SUCCESS) if(Logging.ERROR) Log.e(Logging.TAG,"AttachProjectAsyncTask attach returned conflict: " + conflict);
+	    		if(conflict != ProjectAttachWrapper.RESULT_SUCCESS) {
+					result = selectedProject.getResultDescription();
+					if(Logging.ERROR) {
+						Log.e(Logging.TAG,"AttachProjectAsyncTask attach returned conflict: " + conflict);
+					}
+				}
 	    	}
 	    	if(Logging.DEBUG) Log.d(Logging.TAG, "AttachProjectAsyncTask: finsihed.");
-	    	return null;
+	    	return result;
 		}
 		
 		@Override
@@ -247,10 +254,15 @@ public class BatchProcessingActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {/*
+		protected void onPostExecute(String result) {/*
 			((LinearLayout) findViewById(R.id.attach_status_ongoing_wrapper)).setVisibility(View.GONE);
 			((Button) findViewById(R.id.continue_button)).setVisibility(View.VISIBLE);
 			((Button) findViewById(R.id.share_button)).setVisibility(View.VISIBLE);*/
+			if (result != null) {
+				Toast.makeText(BatchProcessingActivity.this,
+						result,
+						Toast.LENGTH_LONG).show();
+			}
 			continueClicked();
 			super.onPostExecute(result);
 		}

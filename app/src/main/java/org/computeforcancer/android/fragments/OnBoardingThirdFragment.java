@@ -25,7 +25,7 @@ public class OnBoardingThirdFragment extends AbstractBaseFragment {
             @Override
             public void onClick(View view) {
                 ((CredentialInputActivity)getActivity()).setPagerVisibility(false);
-                ((CredentialInputActivity)getActivity()).openPage(0, true);
+                ((CredentialInputActivity)getActivity()).openPage(0, false);
             }
         });
 
@@ -33,6 +33,7 @@ public class OnBoardingThirdFragment extends AbstractBaseFragment {
         sureB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //((CredentialInputActivity)getActivity()).signIn("Contact@computeforcancer.org", "computeforcancer.org", "Joinactionworld");
                 ((CredentialInputActivity)getActivity()).openFragment(new SignInFragment(), false);
                 ((CredentialInputActivity)getActivity()).setPagerVisibility(false);
                 ((CredentialInputActivity)getActivity()).openPage(0, false);

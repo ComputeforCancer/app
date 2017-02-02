@@ -43,7 +43,7 @@
     <string name="attachproject_credential_input_show_pwd">Show password</string>
     <string name="attachproject_individual_credential_input">Attach projects individually</string>
     <!-- conflicts -->
-    <string name="attachproject_conflicts_desc">There have been problems attaching scientific projects:</string>
+    <string name="attachproject_conflicts_desc">There have been problems attaching scientific project</string>
     <string name="attachproject_conflict_undefined">Could not connect</string>
     <string name="attachproject_conflict_not_unique">Account exists with different password</string>
     <string name="attachproject_conflict_bad_password">Password incorrect</string>
@@ -409,6 +409,12 @@
     <string name="sign_in_password_hint">Password</string>
     <string name="sign_in_forgot_text"><u>Forgot password?</u></string>
     <string name="sign_in_btn_text">SIGN IN</string>
+    <string name="sign_in_or">or</string>
+    <string name="sign_in_fb">Sign in with Facebook</string>
+
+    <string name="fb_login_canceled">Facebook login is canceled</string>
+    <string name="message_smth_wrong">Something went wrong, check your internet connection first</string>
+    <string name="facebook_app_id">1127228544065601</string>
 
     <!-- sign out layout -->
     <string name="sign_up_top_text">Please sign up</string>
@@ -449,7 +455,7 @@
 
     <string name="popup_wifi_top">Computing is paused when these icons are red. This means you must...</string>
     <string name="popup_list">1. Connect to wifi\n2. Plug in device\n3. Charge battery at least 90%\n4. Lock screen</string>
-    <string name="popup_end">... to Computer for Cancer</string>
+    <string name="popup_end">...Compute for Cancer</string>
 
     <string name="about_text">About</string>
     <string name="learn_more">Learn more about computing for cancer at \nwww.computeforcancer.org</string>
@@ -469,7 +475,7 @@
 
     <!-- tell me more -->
     <string name="tell_me_more_top_text">Ready to join the fight against cancer?</string>
-    <string name="tell_me_more_bottom_text">Right now,scientists all over the world are racing to find a cure for cancer.</string>
+    <string name="tell_me_more_bottom_text">Right now, scientists all over the world are racing to find a cure for cancer.</string>
     <string name="ready_to_help">I\'M READY TO HELP</string>
 
     <!-- main -->

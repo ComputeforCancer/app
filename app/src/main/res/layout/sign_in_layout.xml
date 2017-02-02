@@ -1,108 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_pattern">
+    android:background="@drawable/background_pattern"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp">
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:gravity="center"
-                android:layout_weight="1">
+                android:orientation="vertical">
+
                 <TextView
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/sign_in_top_text"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="25sp"
                     android:layout_marginTop="20dp"
-                    android:id="@+id/textView" />
+                    android:gravity="center"
+                    android:text="@string/sign_in_top_text"
+                    android:textColor="@color/white"
+                    android:textSize="25sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:gravity="center"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp">
 
                 <EditText
                     android:id="@+id/sil_email_et"
-                    android:inputType="textEmailAddress"
-                    android:hint="@string/sign_in_email_hint"
                     android:layout_width="fill_parent"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    android:singleLine="true"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_editview_bottom_border"
-                    android:padding="5dp"/>
+                    android:hint="@string/sign_in_email_hint"
+                    android:inputType="textEmailAddress"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
                 <EditText
                     android:id="@+id/sil_name_et"
-                    android:hint="@string/sign_in_name_hint"
                     android:layout_width="fill_parent"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:singleLine="true"
                     android:background="@drawable/shape_editview_bottom_border"
-                    android:padding="5dp"/>
+                    android:hint="@string/sign_in_name_hint"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
                 <EditText
                     android:id="@+id/sil_password_et"
-                    android:inputType="textPassword"
-                    android:hint="@string/sign_in_password_hint"
                     android:layout_width="fill_parent"
-                    android:textColor="@color/white"
-                    android:singleLine="true"
-                    android:textColorHint="@color/white"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/shape_editview_bottom_border"
-                    android:padding="5dp"/>
+                    android:hint="@string/sign_in_password_hint"
+                    android:inputType="textPassword"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white" />
 
                 <TextView
                     android:id="@+id/tvForgotPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:clickable="true"
+                    android:gravity="right"
                     android:text="@string/sign_in_forgot_text"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:clickable="true"
-                    android:layout_marginTop="10dp"
-                    android:gravity="right"/>
+                    android:textSize="15sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
                 android:gravity="center"
-                android:layout_weight="1">
+                android:orientation="vertical">
+
                 <Button
                     android:id="@+id/sil_sign_in_b"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/sign_button_text_color"
-                    android:text="@string/sign_in_btn_text"
-                    android:padding="5dp"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/shape_sign_button"
-                    android:onClick="continueClicked"/>
+                    android:padding="5dp"
+                    android:text="@string/sign_in_btn_text"
+                    android:textColor="@color/sign_button_text_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="5"
+                        android:background="@color/white" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="@string/sign_in_or"
+                        android:textColor="@color/white" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="2dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="5"
+                        android:background="@color/white" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginStart="40dp">
+
+                    <com.facebook.login.widget.LoginButton
+                        android:id="@+id/sil_fb_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/sil_sign_in_fb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_sign_fb_button"
+                        android:drawableLeft="@drawable/facebook_icon"
+                        android:onClick="continueClicked"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:text="@string/sign_in_fb"
+                        android:textAllCaps="false"
+                        android:textColor="@color/sign_button_text_color"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                </FrameLayout>
+
             </LinearLayout>
         </LinearLayout>
+
     </ScrollView>
-</LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/sil_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>
