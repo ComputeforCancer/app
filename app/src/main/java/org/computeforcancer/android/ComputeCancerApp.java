@@ -7,8 +7,11 @@ import android.content.pm.Signature;
 import android.util.Base64;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 
+import io.branch.referral.Branch;
+import io.fabric.sdk.android.Fabric;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -21,6 +24,8 @@ public class ComputeCancerApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
+        Branch.getAutoInstance(this);
 
         try {
             PackageInfo info = getPackageManager().getPackageInfo(

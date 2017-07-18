@@ -19,6 +19,7 @@ public class SharedPrefs {
     public static final String AUTO_START = "auto_start";
     public static final String LAST_NOTIFICATION = "last_notification";
     public static final String NOTIFICATION_DELAY = "notification_delay";
+    public static final String USER_ID = "user_id";
 
     public SharedPrefs(Context context) {
         mSharedPreferences = context.getSharedPreferences("org.computeforcancer.android",
@@ -38,6 +39,21 @@ public class SharedPrefs {
         return localInstance;
     }
 */
+
+    public String getUserIdString() {
+        long userId = mSharedPreferences.getLong(USER_ID, 0);
+        return userId > 0 ? String.valueOf(userId) : "";
+    }
+
+    public Long getUserId() {
+        long userId = mSharedPreferences.getLong(USER_ID, 0);
+        return userId > 0 ? userId : null;
+    }
+
+    public void putUserId(Long userId) {
+        mSharedPreferences.edit().putLong(USER_ID, userId).commit();
+    }
+
     public void putEmail(String email) {
         mSharedPreferences.edit().putString(CURRENT_EMAIL, email).commit();
     }

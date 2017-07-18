@@ -92,5 +92,8 @@
             </intent-filter>
         </receiver>
         <activity android:name=".BoincNotExclusiveDialog" android:theme="@android:style/Theme.Dialog" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="b6cc774b1ac984ccf5a7a292247389578d9581b3" />
     </application>
 </manifest>

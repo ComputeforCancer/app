@@ -16,6 +16,8 @@ public class UserData {
     @SerializedName("wcg_password")
     private String password;
 
+    private Long id;
+
     public String getEmail() {
         return email;
     }
@@ -28,4 +30,5 @@ public class UserData {
         return password;
     }
 
+    public Long getId() {return id; }
 }

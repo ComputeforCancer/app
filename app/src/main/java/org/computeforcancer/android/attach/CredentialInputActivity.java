@@ -60,7 +60,7 @@ public class CredentialInputActivity extends FragmentActivity {
 	private ViewPager mViewPager;
 	private PagerAdapter mPagerAdapter;
 	private boolean isPagerVisible;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {  
         super.onCreate(savedInstanceState);

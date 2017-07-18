@@ -23,6 +23,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 /**
  * Shows dialog to exit, if another BONIC based application detected on device.
  */
@@ -30,6 +33,8 @@ public class BoincNotExclusiveDialog extends Activity {
 	 @Override
 	    public void onCreate(Bundle savedInstanceState) {
 		   super.onCreate(savedInstanceState);
+		 Answers.getInstance().logCustom(new CustomEvent("Unable to Compute")
+		 .putCustomAttribute("reason", "other_app"));
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		    builder.setMessage(getString(R.string.nonexcl_dialog_text))
 		    .setCancelable(false)

@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
 import com.facebook.CallbackManager;
 import com.facebook.login.widget.LoginButton;
 
@@ -20,6 +22,7 @@ import org.computeforcancer.android.attach.CredentialInputActivity;
 import org.computeforcancer.android.fbLogin.FbLoginManager;
 import org.computeforcancer.android.fbLogin.ResultDispatcher;
 import org.computeforcancer.android.fbLogin.UserData;
+import org.computeforcancer.android.utils.SharedPrefs;
 
 /**
  * Created by Maksym Shpyl on 01.12.2016.
@@ -112,11 +115,15 @@ public class SignInFragment extends AbstractBaseFragment implements ResultDispat
 
     @Override
     public void dispatchSuccessResult(UserData result) {
+        SharedPrefs sharedPrefs = new SharedPrefs(getContext());
+        sharedPrefs.putUserId(result.getId());
+        Answers.getInstance().logLogin(new LoginEvent().putSuccess(true).putMethod("facebook").putCustomAttribute("user_id", sharedPrefs.getUserId()));
         ((CredentialInputActivity)getActivity()).signIn(result.getEmail(), result.getUserName(), result.getPassword());
     }
 
     @Override
     public void dispatchError(String error) {
+        Answers.getInstance().logLogin(new LoginEvent().putSuccess(false).putMethod("facebook"));
         mProgress.setVisibility(View.GONE);
         Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
     }
